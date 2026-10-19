@@ -1,0 +1,60 @@
+# hMOTD Configuration
+# A highly optimized Velocity MOTD plugin supporting MiniMessage, legacy '&' codes and hex colors.
+
+# List of MOTDs to display. Supports MiniMessage, legacy '&' codes, and hex colors (#RRGGBB / &#RRGGBB).
+motds:
+  - "<gradient:#00FF00:#0000FF>hMOTD</gradient> <white>Optimized MOTD"
+  - "&aWelcome to &6&lhMOTD &r&7- &eSuper optimized"
+  - "<#FF5555>Custom MOTD &bwith mixed formats"
+
+# How to pick the MOTD: RANDOM, SEQUENTIAL, DISABLED
+rotation-mode: RANDOM
+
+# Text format mode: MINIMESSAGE, LEGACY, MIXED
+format-mode: MIXED
+
+# Centering configuration
+center:
+  # Enable automatic MOTD centering based on Minecraft font widths
+  enabled: true
+  # Maximum width in pixels used for centering calculations (default Minecraft server list MOTD width)
+  width: 248
+
+# Server icon configuration
+icon:
+  # Enable custom server icon
+  enabled: true
+  # Icon file name inside the plugin directory (must be a 64x64 PNG)
+  file: "server-icon.png"
+
+# Server info overrides
+server-info:
+  # Override the version text shown to outdated clients
+  override-version: false
+  # Version text (supports all formats)
+  version-text: "<#FF0000>hMOTD"
+
+  # Override online and max player counts
+  override-players: false
+  # Fake online player count
+  online-players: 0
+  # Fake max player count
+  max-players: 100
+
+  # Hide online player count
+  hide-online: false
+  # Hide max player count
+  hide-max: false
+
+  # Override player sample (hover text)
+  override-sample: false
+  # Sample lines shown when hovering the player count
+  sample-lines:
+    - "&aPowered by hMOTD"
+    - "&bSuper optimized"
+
+# Enable placeholder replacement (%online%, %max%, %proxy_name%, %time%, %date%)
+placeholders: true
+
+# Enable debug logging
+debug: false

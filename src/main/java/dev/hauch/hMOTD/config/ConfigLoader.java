@@ -38,10 +38,22 @@ public final class ConfigLoader {
         try {
             Files.createDirectories(configPath.getParent());
             if (!Files.exists(configPath)) {
-                saveDefaults(new hMOTDConfig());
+                copyDefaultConfig();
             }
         } catch (Exception e) {
             throw new ConfigurateException("Could not create config file", e);
+        }
+    }
+
+    private void copyDefaultConfig() {
+        try (var in = getClass().getResourceAsStream("/config.yml")) {
+            if (in != null) {
+                Files.copy(in, configPath);
+            } else {
+                saveDefaults(new hMOTDConfig());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Could not copy default config", e);
         }
     }
 
