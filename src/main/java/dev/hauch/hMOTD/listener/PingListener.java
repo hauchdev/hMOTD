@@ -36,17 +36,21 @@ public final class PingListener {
 
     @Subscribe
     public void onProxyPing(ProxyPingEvent event) {
-        hMOTDConfig cfg = config.get();
-        ServerPing original = event.getPing();
-        ServerPing.Builder builder = original.asBuilder();
+        try {
+            hMOTDConfig cfg = config.get();
+            ServerPing original = event.getPing();
+            ServerPing.Builder builder = original.asBuilder();
 
-        builder.description(motdManager.nextMOTD());
+            builder.description(motdManager.nextMOTD());
 
-        applyIcon(builder, cfg);
-        applyPlayers(builder, original, cfg);
-        applyVersion(builder, original, cfg);
+            applyIcon(builder, cfg);
+            applyPlayers(builder, original, cfg);
+            applyVersion(builder, original, cfg);
 
-        event.setPing(builder.build());
+            event.setPing(builder.build());
+        } catch (Exception e) {
+            // Never break the proxy ping response; fall back to the original ping.
+        }
     }
 
     private void applyIcon(ServerPing.Builder builder, hMOTDConfig cfg) {
