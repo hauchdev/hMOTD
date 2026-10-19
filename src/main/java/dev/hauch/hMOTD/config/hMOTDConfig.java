@@ -87,6 +87,25 @@ public final class hMOTDConfig {
         return extraPlaceholders;
     }
 
+    /**
+     * Normalizes invalid configuration values to safe defaults.
+     */
+    public void validate() {
+        if (center.width <= 0) {
+            center.width = 248;
+        }
+        if (serverInfo.onlinePlayers < -1) {
+            serverInfo.onlinePlayers = -1;
+        }
+        if (serverInfo.maxPlayers < -1) {
+            serverInfo.maxPlayers = -1;
+        }
+        if (motds == null || motds.isEmpty()) {
+            motds = new ArrayList<>();
+            motds.add("<green>hMOTD</green> <white>default MOTD");
+        }
+    }
+
     @ConfigSerializable
     public static final class CenterConfig {
         @Comment("Enable automatic MOTD centering based on Minecraft font widths")

@@ -43,6 +43,7 @@ public final class ConfigLoader {
         } catch (SerializationException e) {
             throw new ConfigurateException("Failed to deserialize config", e);
         }
+        config.validate();
         saveDefaults(config);
         return config;
     }
