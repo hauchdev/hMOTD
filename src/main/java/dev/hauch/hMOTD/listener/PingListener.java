@@ -5,6 +5,7 @@ import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
 import dev.hauch.hMOTD.cache.IconCache;
+import dev.hauch.hMOTD.cache.IconManager;
 import dev.hauch.hMOTD.config.hMOTDConfig;
 import dev.hauch.hMOTD.format.TextFormatter;
 import dev.hauch.hMOTD.motd.MOTDManager;
@@ -21,14 +22,14 @@ public final class PingListener {
 
     private final AtomicReference<hMOTDConfig> config;
     private final MOTDManager motdManager;
-    private final IconCache iconCache;
+    private final IconManager iconManager;
     private final PlaceholderResolver placeholderResolver;
     private final TextFormatter formatter;
 
-    public PingListener(AtomicReference<hMOTDConfig> config, MOTDManager motdManager, IconCache iconCache, PlaceholderResolver placeholderResolver) {
+    public PingListener(AtomicReference<hMOTDConfig> config, MOTDManager motdManager, IconManager iconManager, PlaceholderResolver placeholderResolver) {
         this.config = config;
         this.motdManager = motdManager;
-        this.iconCache = iconCache;
+        this.iconManager = iconManager;
         this.placeholderResolver = placeholderResolver;
         this.formatter = new TextFormatter(TextFormatter.Mode.MIXED);
     }
@@ -49,10 +50,7 @@ public final class PingListener {
     }
 
     private void applyIcon(ServerPing.Builder builder, hMOTDConfig cfg) {
-        if (!cfg.icon().enabled()) {
-            return;
-        }
-        Path icon = iconCache.getIcon(cfg.icon().file());
+        Path icon = iconManager.nextIcon(cfg.icon());
         if (icon != null) {
             try {
                 builder.favicon(Favicon.create(icon));

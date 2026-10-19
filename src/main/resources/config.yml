@@ -24,8 +24,12 @@ center:
 icon:
   # Enable custom server icon
   enabled: true
-  # Icon file name inside the plugin directory (must be a 64x64 PNG)
+  # Single icon file name inside the plugin directory (must be a 64x64 PNG)
   file: "server-icon.png"
+  # List of icon files for rotation (overrides file when not empty)
+  files: []
+  # Icon rotation mode: RANDOM, SEQUENTIAL, DISABLED
+  rotation-mode: RANDOM
 
 # Server info overrides
 server-info:

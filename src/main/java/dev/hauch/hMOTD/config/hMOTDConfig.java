@@ -109,8 +109,14 @@ public final class hMOTDConfig {
         @Comment("Enable custom server icon")
         private boolean enabled = true;
 
-        @Comment("Icon file name inside the plugin directory")
+        @Comment("Single icon file name inside the plugin directory")
         private String file = "server-icon.png";
+
+        @Comment("List of icon files for rotation (overrides file when not empty)")
+        private List<String> files = new ArrayList<>();
+
+        @Comment("Icon rotation mode: RANDOM, SEQUENTIAL, DISABLED")
+        private RotationMode rotationMode = RotationMode.RANDOM;
 
         public IconConfig() {
         }
@@ -121,6 +127,14 @@ public final class hMOTDConfig {
 
         public String file() {
             return file;
+        }
+
+        public List<String> files() {
+            return files;
+        }
+
+        public RotationMode rotationMode() {
+            return rotationMode;
         }
     }
 

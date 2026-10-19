@@ -8,6 +8,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.hauch.hMOTD.cache.IconCache;
+import dev.hauch.hMOTD.cache.IconManager;
 import dev.hauch.hMOTD.command.ReloadCommand;
 import dev.hauch.hMOTD.config.ConfigLoader;
 import dev.hauch.hMOTD.config.hMOTDConfig;
@@ -44,9 +45,10 @@ public class HMOTD {
         PlaceholderResolver placeholderResolver = new PlaceholderResolver(proxyServer);
         this.motdManager = new MOTDManager(logger, placeholderResolver, config.get());
         IconCache iconCache = new IconCache(dataDirectory, logger);
+        IconManager iconManager = new IconManager(iconCache, logger);
 
         EventManager eventManager = proxyServer.getEventManager();
-        eventManager.register(this, new PingListener(config, motdManager, iconCache, placeholderResolver));
+        eventManager.register(this, new PingListener(config, motdManager, iconManager, placeholderResolver));
 
         CommandManager commandManager = proxyServer.getCommandManager();
         commandManager.register(
