@@ -52,7 +52,7 @@ public class HMOTD {
         IconManager iconManager = new IconManager(iconCache, logger);
 
         EventManager eventManager = proxyServer.getEventManager();
-        eventManager.register(this, new PingListener(config, motdManager, iconManager, placeholderResolver));
+        eventManager.register(this, new PingListener(config, motdManager, iconManager, placeholderResolver, logger));
 
         CommandManager commandManager = proxyServer.getCommandManager();
         commandManager.register(

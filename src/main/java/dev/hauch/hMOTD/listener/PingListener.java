@@ -11,6 +11,7 @@ import dev.hauch.hMOTD.format.TextFormatter;
 import dev.hauch.hMOTD.motd.MOTDManager;
 import dev.hauch.hMOTD.placeholder.PlaceholderResolver;
 import net.kyori.adventure.text.Component;
+import org.slf4j.Logger;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -28,13 +29,15 @@ public final class PingListener {
     private final IconManager iconManager;
     private final PlaceholderResolver placeholderResolver;
     private final TextFormatter formatter;
+    private final Logger logger;
 
-    public PingListener(AtomicReference<hMOTDConfig> config, MOTDManager motdManager, IconManager iconManager, PlaceholderResolver placeholderResolver) {
+    public PingListener(AtomicReference<hMOTDConfig> config, MOTDManager motdManager, IconManager iconManager, PlaceholderResolver placeholderResolver, Logger logger) {
         this.config = config;
         this.motdManager = motdManager;
         this.iconManager = iconManager;
         this.placeholderResolver = placeholderResolver;
         this.formatter = new TextFormatter(TextFormatter.Mode.MIXED);
+        this.logger = logger;
     }
 
     @Subscribe
@@ -53,6 +56,9 @@ public final class PingListener {
             event.setPing(builder.build());
         } catch (Exception e) {
             // Never break the proxy ping response; fall back to the original ping.
+            if (logger != null) {
+                logger.warn("Failed to handle proxy ping", e);
+            }
         }
     }
 
