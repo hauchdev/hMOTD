@@ -56,5 +56,9 @@ server-info:
 # Enable placeholder replacement (%online%, %max%, %proxy_name%, %time%, %date%)
 placeholders: true
 
+# Custom placeholders available as %key% in MOTDs, version text and sample lines
+extra-placeholders:
+  server_name: "hMOTD Network"
+
 # Enable debug logging
 debug: false

@@ -4,7 +4,9 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @ConfigSerializable
 public final class hMOTDConfig {
@@ -32,6 +34,9 @@ public final class hMOTDConfig {
 
     @Comment("Enable debug logging")
     private boolean debug = false;
+
+    @Comment("Custom placeholders available as %key% in MOTDs, version text and sample lines")
+    private Map<String, String> extraPlaceholders = new HashMap<>();
 
     public hMOTDConfig() {
     }
@@ -73,6 +78,10 @@ public final class hMOTDConfig {
 
     public boolean debug() {
         return debug;
+    }
+
+    public Map<String, String> extraPlaceholders() {
+        return extraPlaceholders;
     }
 
     @ConfigSerializable

@@ -35,10 +35,17 @@ public final class PlaceholderResolver {
     }
 
     public String resolve(String input) {
+        return resolve(input, Map.of());
+    }
+
+    public String resolve(String input, Map<String, String> extra) {
         if (input == null || input.isEmpty()) {
             return input;
         }
         String result = input;
+        for (Map.Entry<String, String> entry : extra.entrySet()) {
+            result = result.replace("%" + entry.getKey() + "%", entry.getValue());
+        }
         for (Map.Entry<String, Supplier<String>> entry : staticPlaceholders.entrySet()) {
             result = result.replace("%" + entry.getKey() + "%", entry.getValue().get());
         }

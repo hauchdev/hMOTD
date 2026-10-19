@@ -71,7 +71,9 @@ public final class MOTDManager {
 
     private Component buildComponent(String raw) {
         hMOTDConfig cfg = config.get();
-        String withPlaceholders = cfg.placeholders() ? placeholderResolver.resolve(raw) : raw;
+        String withPlaceholders = cfg.placeholders()
+                ? placeholderResolver.resolve(raw, cfg.extraPlaceholders())
+                : raw;
         String centered = cfg.center().enabled()
                 ? CenterCalculator.center(withPlaceholders, cfg.center().width())
                 : withPlaceholders;

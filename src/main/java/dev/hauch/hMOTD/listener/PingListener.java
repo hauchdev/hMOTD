@@ -8,6 +8,7 @@ import dev.hauch.hMOTD.cache.IconCache;
 import dev.hauch.hMOTD.config.hMOTDConfig;
 import dev.hauch.hMOTD.format.TextFormatter;
 import dev.hauch.hMOTD.motd.MOTDManager;
+import dev.hauch.hMOTD.placeholder.PlaceholderResolver;
 import net.kyori.adventure.text.Component;
 
 import java.nio.file.Path;
@@ -21,12 +22,14 @@ public final class PingListener {
     private final AtomicReference<hMOTDConfig> config;
     private final MOTDManager motdManager;
     private final IconCache iconCache;
+    private final PlaceholderResolver placeholderResolver;
     private final TextFormatter formatter;
 
-    public PingListener(AtomicReference<hMOTDConfig> config, MOTDManager motdManager, IconCache iconCache) {
+    public PingListener(AtomicReference<hMOTDConfig> config, MOTDManager motdManager, IconCache iconCache, PlaceholderResolver placeholderResolver) {
         this.config = config;
         this.motdManager = motdManager;
         this.iconCache = iconCache;
+        this.placeholderResolver = placeholderResolver;
         this.formatter = new TextFormatter(TextFormatter.Mode.MIXED);
     }
 
@@ -86,7 +89,8 @@ public final class PingListener {
         List<ServerPing.SamplePlayer> sample = new ArrayList<>();
         if (info.overrideSample() && info.sampleLines() != null && !info.sampleLines().isEmpty()) {
             for (String line : info.sampleLines()) {
-                Component component = formatter.format(line);
+                String resolved = resolvePlaceholders(line, cfg);
+                Component component = formatter.format(resolved);
                 sample.add(new ServerPing.SamplePlayer(formatter.serializeLegacy(component), java.util.UUID.randomUUID()));
             }
         } else {
@@ -105,8 +109,18 @@ public final class PingListener {
         if (!info.overrideVersion()) {
             return;
         }
-        int protocol = original.getVersion().map(ServerPing.Version::getProtocol).orElse(0);
-        Component versionComponent = formatter.format(info.versionText());
+        int protocol = Optional.ofNullable(original.getVersion())
+                .map(ServerPing.Version::getProtocol)
+                .orElse(0);
+        String resolvedVersion = resolvePlaceholders(info.versionText(), cfg);
+        Component versionComponent = formatter.format(resolvedVersion);
         builder.version(new ServerPing.Version(protocol, formatter.serializeLegacy(versionComponent)));
+    }
+
+    private String resolvePlaceholders(String input, hMOTDConfig cfg) {
+        if (!cfg.placeholders()) {
+            return input;
+        }
+        return placeholderResolver.resolve(input, cfg.extraPlaceholders());
     }
 }
