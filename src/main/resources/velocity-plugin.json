@@ -2,8 +2,11 @@
   "id": "hmotd",
   "name": "hMOTD",
   "version": "${version}",
-  "main": "dev.hauch.hMOTD.HMOTD",
+  "description": "Highly optimized Velocity MOTD plugin with MiniMessage, legacy colors, hex colors and centering support.",
+  "url": "https://github.com/Hauchdev/hMOTD",
   "authors": [
     "Hauchdev"
-  ]
+  ],
+  "dependencies": [],
+  "main": "dev.hauch.hMOTD.HMOTD"
 }
