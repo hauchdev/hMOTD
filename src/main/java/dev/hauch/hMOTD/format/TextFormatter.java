@@ -3,6 +3,7 @@ package dev.hauch.hMOTD.format;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +36,14 @@ public final class TextFormatter {
             case LEGACY -> parseLegacy(input);
             case MIXED -> parseMixed(input);
         };
+    }
+
+    public String serializeLegacy(Component component) {
+        return legacySerializer.serialize(component);
+    }
+
+    public String serializePlain(Component component) {
+        return PlainTextComponentSerializer.plainText().serialize(component);
     }
 
     private Component parseMiniMessage(String input) {
