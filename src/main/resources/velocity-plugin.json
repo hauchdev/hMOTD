@@ -1,0 +1,9 @@
+{
+  "id": "hmotd",
+  "name": "hMOTD",
+  "version": "${version}",
+  "main": "dev.hauch.hMOTD.HMOTD",
+  "authors": [
+    "Hauchdev"
+  ]
+}
