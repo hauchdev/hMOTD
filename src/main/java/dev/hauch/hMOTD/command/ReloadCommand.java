@@ -11,6 +11,9 @@ import org.slf4j.Logger;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Handles the /hmotd reload command.
+ */
 public final class ReloadCommand implements SimpleCommand {
 
     private final Logger logger;

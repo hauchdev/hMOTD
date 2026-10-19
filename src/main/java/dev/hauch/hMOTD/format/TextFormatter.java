@@ -8,6 +8,10 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Parses text using MiniMessage, legacy ampersand codes or a mixed mode that auto-detects the format.
+ * Also normalizes hex colors to the target format.
+ */
 public final class TextFormatter {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("(?:&#|#)([0-9a-fA-F]{6})");

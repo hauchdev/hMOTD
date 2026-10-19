@@ -13,6 +13,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Selects, caches and renders the next MOTD according to the active configuration.
+ * Handles rotation modes, placeholder replacement and optional centering.
+ */
 public final class MOTDManager {
 
     private final Logger logger;

@@ -2,6 +2,9 @@ package dev.hauch.hMOTD.center;
 
 import java.util.regex.Pattern;
 
+/**
+ * Centers a formatted MOTD string by prepending spaces based on the visible Minecraft font width.
+ */
 public final class CenterCalculator {
 
     private static final Pattern MINIMESSAGE_TAG_PATTERN = Pattern.compile("<[^>]*>");

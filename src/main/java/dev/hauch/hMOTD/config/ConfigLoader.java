@@ -9,6 +9,9 @@ import org.spongepowered.configurate.objectmapping.ObjectMapper;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * Loads and saves the hMOTD YAML configuration, creating defaults when missing.
+ */
 public final class ConfigLoader {
 
     private final Path configPath;
@@ -24,7 +27,11 @@ public final class ConfigLoader {
                         .implicitInitialization(true)
                 )
                 .build();
-        this.mapper = ObjectMapper.factory().get(hMOTDConfig.class);
+        try {
+            this.mapper = ObjectMapper.factory().get(hMOTDConfig.class);
+        } catch (SerializationException e) {
+            throw new RuntimeException("Failed to create config mapper", e);
+        }
     }
 
     public hMOTDConfig load() throws ConfigurateException {

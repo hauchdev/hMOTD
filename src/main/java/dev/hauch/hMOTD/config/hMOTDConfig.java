@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Root configuration object for hMOTD.
+ */
 @ConfigSerializable
 public final class hMOTDConfig {
 

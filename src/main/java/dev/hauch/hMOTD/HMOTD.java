@@ -20,6 +20,10 @@ import org.slf4j.Logger;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Main plugin class for hMOTD.
+ * Wires configuration, the MOTD manager, icon rotation, command handling and the proxy ping listener.
+ */
 public class HMOTD {
 
     private final ProxyServer proxyServer;

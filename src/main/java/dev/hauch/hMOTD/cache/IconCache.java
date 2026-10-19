@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Caches the path of the server icon and invalidates it when the file changes.
+ */
 public final class IconCache {
 
     private final Path pluginDirectory;

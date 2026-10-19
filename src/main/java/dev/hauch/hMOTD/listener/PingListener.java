@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * Listens to proxy ping events and customizes the server list response.
+ */
 public final class PingListener {
 
     private final AtomicReference<hMOTDConfig> config;

@@ -3,6 +3,9 @@ package dev.hauch.hMOTD.center;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Approximates the visual width of characters using Minecraft's default font metrics.
+ */
 public final class FontWidthCalculator {
 
     private static final int DEFAULT_WIDTH = 5;

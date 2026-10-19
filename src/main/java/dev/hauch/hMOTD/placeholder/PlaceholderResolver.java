@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Resolves built-in and user-defined placeholders in text strings.
+ */
 public final class PlaceholderResolver {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");

@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Selects the next server icon according to the configured rotation mode.
+ */
 public final class IconManager {
 
     private final IconCache iconCache;
