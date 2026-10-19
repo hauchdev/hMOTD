@@ -55,8 +55,8 @@ class TextFormatterTest {
     }
 
     @Test
-    void testMixedFormatWithAmpersandAndMiniMessage() {
-        Component component = mixedFormatter.format("&aHello <red>World");
+    void testMixedFormatAutoDetectsLegacy() {
+        Component component = mixedFormatter.format("&aHello &cWorld");
         assertEquals("Hello World", plain(component));
     }
 

@@ -26,6 +26,9 @@ public final class PlaceholderResolver {
     }
 
     private void registerDefaults() {
+        if (proxyServer == null) {
+            return;
+        }
         dynamicPlaceholders.put("online", () -> String.valueOf(proxyServer.getPlayerCount()));
         dynamicPlaceholders.put("max", () -> String.valueOf(proxyServer.getConfiguration().getShowMaxPlayers()));
         dynamicPlaceholders.put("proxy_name", () -> proxyServer.getConfiguration().getMotd().toString());
