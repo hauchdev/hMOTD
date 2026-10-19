@@ -35,6 +35,6 @@ class CenterCalculatorTest {
 
     @Test
     void testVisibleWidthCalculation() {
-        assertEquals(25, CenterCalculator.visibleWidth("Hello")); // H=5, e=5, l=1, l=1, o=5
+        assertEquals(17, CenterCalculator.visibleWidth("Hello")); // H=5, e=5, l=1, l=1, o=5
     }
 }
