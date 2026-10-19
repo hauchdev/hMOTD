@@ -47,6 +47,19 @@ class TextFormatterTest {
         assertEquals(Component.empty(), component);
     }
 
+    @Test
+    void testLegacyHexColor() {
+        Component component = legacyFormatter.format("&#FF0000Red");
+        assertEquals("Red", plain(component));
+        assertEquals(TextColor.color(0xFF0000), component.color());
+    }
+
+    @Test
+    void testMixedFormatWithAmpersandAndMiniMessage() {
+        Component component = mixedFormatter.format("&aHello <red>World");
+        assertEquals("Hello World", plain(component));
+    }
+
     private String plain(Component component) {
         return PlainTextComponentSerializer.plainText().serialize(component);
     }

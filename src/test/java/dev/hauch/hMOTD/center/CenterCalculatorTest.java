@@ -37,4 +37,10 @@ class CenterCalculatorTest {
     void testVisibleWidthCalculation() {
         assertEquals(17, CenterCalculator.visibleWidth("Hello")); // H=5, e=5, l=1, l=1, o=5
     }
+
+    @Test
+    void testCenteringDoesNotExceedWidth() {
+        String centered = CenterCalculator.center("A", 10);
+        assertEquals(1, centered.length() - 1); // one space prefix
+    }
 }
