@@ -2,6 +2,7 @@ package dev.hauch.hMOTD.config;
 
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
 import org.spongepowered.configurate.objectmapping.ObjectMapper;
 
@@ -29,7 +30,12 @@ public final class ConfigLoader {
     public hMOTDConfig load() throws ConfigurateException {
         ensureFileExists();
         CommentedConfigurationNode root = loader.load();
-        hMOTDConfig config = mapper.load(root);
+        hMOTDConfig config;
+        try {
+            config = mapper.load(root);
+        } catch (SerializationException e) {
+            throw new ConfigurateException("Failed to deserialize config", e);
+        }
         saveDefaults(config);
         return config;
     }
@@ -59,7 +65,11 @@ public final class ConfigLoader {
 
     private void saveDefaults(hMOTDConfig config) throws ConfigurateException {
         CommentedConfigurationNode root = loader.createNode();
-        mapper.save(config, root);
+        try {
+            mapper.save(config, root);
+        } catch (SerializationException e) {
+            throw new ConfigurateException("Failed to serialize config defaults", e);
+        }
         loader.save(root);
     }
 }

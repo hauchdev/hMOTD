@@ -2,19 +2,15 @@ package dev.hauch.hMOTD.cache;
 
 import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Base64;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class IconCache {
 
-    private static final String DATA_URI_PREFIX = "data:image/png;base64,";
-
     private final Path pluginDirectory;
     private final Logger logger;
-    private final AtomicReference<String> cachedIcon = new AtomicReference<>();
+    private final AtomicReference<Path> cachedPath = new AtomicReference<>();
     private volatile long lastModified;
 
     public IconCache(Path pluginDirectory, Logger logger) {
@@ -22,33 +18,31 @@ public final class IconCache {
         this.logger = logger;
     }
 
-    public String getIcon(String fileName) {
+    public Path getIcon(String fileName) {
         Path iconPath = pluginDirectory.resolve(fileName);
         if (!Files.exists(iconPath)) {
             return null;
         }
         try {
             long modified = Files.getLastModifiedTime(iconPath).toMillis();
-            String cached = cachedIcon.get();
+            Path cached = cachedPath.get();
             if (cached != null && modified == lastModified) {
                 return cached;
             }
-            byte[] bytes = Files.readAllBytes(iconPath);
-            String encoded = DATA_URI_PREFIX + Base64.getEncoder().encodeToString(bytes);
-            cachedIcon.set(encoded);
+            cachedPath.set(iconPath);
             lastModified = modified;
             if (logger.isDebugEnabled()) {
                 logger.debug("Loaded server icon from {}", iconPath);
             }
-            return encoded;
-        } catch (IOException e) {
+            return iconPath;
+        } catch (Exception e) {
             logger.warn("Failed to load server icon from {}", iconPath, e);
             return null;
         }
     }
 
     public void invalidate() {
-        cachedIcon.set(null);
+        cachedPath.set(null);
         lastModified = 0;
     }
 }

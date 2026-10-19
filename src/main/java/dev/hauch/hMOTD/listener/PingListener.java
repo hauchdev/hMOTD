@@ -10,8 +10,10 @@ import dev.hauch.hMOTD.format.TextFormatter;
 import dev.hauch.hMOTD.motd.MOTDManager;
 import net.kyori.adventure.text.Component;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 public final class PingListener {
@@ -31,13 +33,14 @@ public final class PingListener {
     @Subscribe
     public void onProxyPing(ProxyPingEvent event) {
         hMOTDConfig cfg = config.get();
-        ServerPing.Builder builder = event.getPing().asBuilder();
+        ServerPing original = event.getPing();
+        ServerPing.Builder builder = original.asBuilder();
 
         builder.description(motdManager.nextMOTD());
 
         applyIcon(builder, cfg);
-        applyPlayers(builder, cfg);
-        applyVersion(builder, cfg);
+        applyPlayers(builder, original, cfg);
+        applyVersion(builder, original, cfg);
 
         event.setPing(builder.build());
     }
@@ -46,18 +49,22 @@ public final class PingListener {
         if (!cfg.icon().enabled()) {
             return;
         }
-        String icon = iconCache.getIcon(cfg.icon().file());
+        Path icon = iconCache.getIcon(cfg.icon().file());
         if (icon != null) {
-            builder.favicon(Favicon.create(icon));
+            try {
+                builder.favicon(Favicon.create(icon));
+            } catch (Exception e) {
+                // ignore invalid icon
+            }
         }
     }
 
-    private void applyPlayers(ServerPing.Builder builder, hMOTDConfig cfg) {
+    private void applyPlayers(ServerPing.Builder builder, ServerPing original, hMOTDConfig cfg) {
         hMOTDConfig.ServerInfoConfig info = cfg.serverInfo();
-        ServerPing.Players players = builder.getPlayers().orElse(null);
+        Optional<ServerPing.Players> originalPlayers = original.getPlayers();
 
-        int online = players != null ? players.getOnline() : 0;
-        int max = players != null ? players.getMax() : 0;
+        int online = originalPlayers.map(ServerPing.Players::getOnline).orElse(0);
+        int max = originalPlayers.map(ServerPing.Players::getMax).orElse(0);
 
         if (info.overridePlayers()) {
             online = info.onlinePlayers();
@@ -82,8 +89,8 @@ public final class PingListener {
                 Component component = formatter.format(line);
                 sample.add(new ServerPing.SamplePlayer(formatter.serializeLegacy(component), java.util.UUID.randomUUID()));
             }
-        } else if (players != null && players.getSample() != null) {
-            sample = new ArrayList<>(players.getSample());
+        } else {
+            originalPlayers.ifPresent(players -> sample.addAll(players.getSample()));
         }
 
         builder.samplePlayers(sample);
@@ -93,12 +100,12 @@ public final class PingListener {
         }
     }
 
-    private void applyVersion(ServerPing.Builder builder, hMOTDConfig cfg) {
+    private void applyVersion(ServerPing.Builder builder, ServerPing original, hMOTDConfig cfg) {
         hMOTDConfig.ServerInfoConfig info = cfg.serverInfo();
         if (!info.overrideVersion()) {
             return;
         }
-        int protocol = builder.getVersion().map(ServerPing.Version::getProtocol).orElse(0);
+        int protocol = original.getVersion().map(ServerPing.Version::getProtocol).orElse(0);
         Component versionComponent = formatter.format(info.versionText());
         builder.version(new ServerPing.Version(protocol, formatter.serializeLegacy(versionComponent)));
     }
