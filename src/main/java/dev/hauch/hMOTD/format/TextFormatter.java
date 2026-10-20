@@ -52,9 +52,12 @@ public final class TextFormatter {
 
     private Component formatLine(String line) {
         return switch (mode) {
-            case MINIMESSAGE -> miniMessage.deserialize(line);
+            case MINIMESSAGE -> miniMessage.deserialize(normalizeStandaloneHexForMiniMessage(line));
             case LEGACY -> parseLegacy(line);
-            case MIXED -> looksLikeMiniMessage(line) ? miniMessage.deserialize(line) : parseLegacy(line);
+            case MIXED -> {
+                String processed = normalizeStandaloneHexForMiniMessage(line);
+                yield looksLikeMiniMessage(processed) ? miniMessage.deserialize(processed) : parseLegacy(line);
+            }
         };
     }
 
@@ -66,6 +69,40 @@ public final class TextFormatter {
 
     private boolean looksLikeMiniMessage(String input) {
         return input.indexOf('<') >= 0 && MINIMESSAGE_TAG_PATTERN.matcher(input).find();
+    }
+
+    /**
+     * Converts standalone hex colors ({@code #RRGGBB} / {@code &#RRGGBB}) outside of MiniMessage tags
+     * into MiniMessage hex tags ({@code <#RRGGBB>}).
+     */
+    private String normalizeStandaloneHexForMiniMessage(String input) {
+        StringBuilder result = new StringBuilder(input.length());
+        boolean inTag = false;
+        int i = 0;
+        while (i < input.length()) {
+            char c = input.charAt(i);
+            if (c == '<') {
+                inTag = true;
+            } else if (c == '>') {
+                inTag = false;
+            }
+
+            if (!inTag && (c == '#' || c == '&') && i + 7 <= input.length()) {
+                int hexStart = c == '&' ? i + 1 : i;
+                if (input.charAt(hexStart) == '#') {
+                    String hex = input.substring(hexStart + 1, hexStart + 7);
+                    if (hex.matches("[0-9a-fA-F]{6}")) {
+                        result.append("<#").append(hex.toUpperCase()).append(">");
+                        i = hexStart + 7;
+                        continue;
+                    }
+                }
+            }
+
+            result.append(c);
+            i++;
+        }
+        return result.toString();
     }
 
     private String normalizeHexForLegacy(String input) {
