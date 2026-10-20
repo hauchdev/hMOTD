@@ -59,6 +59,26 @@ class TextFormatterTest {
     }
 
     @Test
+    void testStandaloneHexInMiniMessageMode() {
+        Component component = miniMessageFormatter.format("#00FF00Hello");
+        assertEquals("Hello", plain(component));
+        assertEquals(TextColor.color(0x00FF00), component.children().get(0).color());
+    }
+
+    @Test
+    void testStandaloneHexInMixedModeWithTags() {
+        Component component = mixedFormatter.format("<bold>#FF0000Hello</bold>");
+        assertEquals("Hello", plain(component));
+        assertEquals(TextColor.color(0xFF0000), component.children().get(0).color());
+    }
+
+    @Test
+    void testMixedModeDoesNotDetectPlainTextAsMiniMessage() {
+        Component component = mixedFormatter.format("Hello World");
+        assertEquals("Hello World", plain(component));
+    }
+
+    @Test
     void testEmptyInput() {
         Component component = mixedFormatter.format("");
         assertEquals(Component.empty(), component);
