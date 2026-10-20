@@ -60,35 +60,32 @@ public final class FontWidthCalculator {
         WIDTHS.put('`', 2);
 
         // Lowercase letters with accurate widths
-        Map<Character, Integer> lower = Map.of(
-                'a', 5,
-                'b', 5,
-                'c', 5,
-                'd', 5,
-                'e', 5,
-                'f', 4,
-                'g', 5,
-                'h', 5,
-                'i', 1,
-                'j', 5,
-                'k', 4,
-                'l', 1,
-                'm', 5,
-                'n', 5,
-                'o', 5,
-                'p', 5,
-                'q', 5,
-                'r', 5,
-                's', 5,
-                't', 3,
-                'u', 5,
-                'v', 5,
-                'w', 5,
-                'x', 5,
-                'y', 5,
-                'z', 5
-        );
-        WIDTHS.putAll(lower);
+        WIDTHS.put('a', 5);
+        WIDTHS.put('b', 5);
+        WIDTHS.put('c', 5);
+        WIDTHS.put('d', 5);
+        WIDTHS.put('e', 5);
+        WIDTHS.put('f', 4);
+        WIDTHS.put('g', 5);
+        WIDTHS.put('h', 5);
+        WIDTHS.put('i', 1);
+        WIDTHS.put('j', 5);
+        WIDTHS.put('k', 4);
+        WIDTHS.put('l', 1);
+        WIDTHS.put('m', 5);
+        WIDTHS.put('n', 5);
+        WIDTHS.put('o', 5);
+        WIDTHS.put('p', 5);
+        WIDTHS.put('q', 5);
+        WIDTHS.put('r', 5);
+        WIDTHS.put('s', 5);
+        WIDTHS.put('t', 3);
+        WIDTHS.put('u', 5);
+        WIDTHS.put('v', 5);
+        WIDTHS.put('w', 5);
+        WIDTHS.put('x', 5);
+        WIDTHS.put('y', 5);
+        WIDTHS.put('z', 5);
 
         WIDTHS.put('{', 3);
         WIDTHS.put('|', 1);
