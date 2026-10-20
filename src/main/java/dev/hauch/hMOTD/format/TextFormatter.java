@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public final class TextFormatter {
 
     private static final Pattern HEX_PATTERN = Pattern.compile("(?:&#|#)([0-9a-fA-F]{6})");
-    private static final Pattern MINIMESSAGE_TAG_PATTERN = Pattern.compile("<[^>]+>");
+    private static final Pattern MINIMESSAGE_TAG_PATTERN = Pattern.compile("<(?:/?[a-zA-Z_#][a-zA-Z0-9_:#\\-]*)>");
 
     private final Mode mode;
     private final MiniMessage miniMessage;
