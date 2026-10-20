@@ -1,5 +1,7 @@
 # hMOTD
 
+![Java CI](https://github.com/Hauchdev/hMOTD/actions/workflows/ci.yml/badge.svg)
+
 A highly optimized **Velocity** MOTD plugin inspired by [MiniMOTD](https://github.com/jpenilla/MiniMOTD), built from the ground up for performance and flexibility.
 
 ## Features
