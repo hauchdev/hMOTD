@@ -23,21 +23,21 @@ class TextFormatterTest {
     void testMiniMessageColorParsing() {
         Component component = miniMessageFormatter.format("<red>Hello <blue>World");
         assertEquals("Hello World", plain(component));
-        assertEquals(TextColor.color(0xFF5555), component.color());
+        assertEquals(TextColor.color(0xFF5555), component.children().get(0).color());
     }
 
     @Test
     void testMiniMessageHexNative() {
         Component component = miniMessageFormatter.format("<#00FF00>Hello");
         assertEquals("Hello", plain(component));
-        assertEquals(TextColor.color(0x00FF00), component.color());
+        assertEquals(TextColor.color(0x00FF00), component.children().get(0).color());
     }
 
     @Test
     void testLegacyHexColorParsing() {
         Component component = legacyFormatter.format("#00FF00Hello");
         assertEquals("Hello", plain(component));
-        assertEquals(TextColor.color(0x00FF00), component.color());
+        assertEquals(TextColor.color(0x00FF00), component.children().get(0).color());
     }
 
     @Test
