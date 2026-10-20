@@ -9,8 +9,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Parses text using MiniMessage, legacy ampersand codes or a mixed mode that auto-detects the format.
- * Also normalizes hex colors to the target format.
+ * Parses text into Adventure Components supporting MiniMessage, legacy ampersand codes,
+ * hex colors and a mixed mode that auto-detects the dominant format.
+ * Also handles {@code \n} as a line separator.
  */
 public final class TextFormatter {
 
@@ -30,29 +31,31 @@ public final class TextFormatter {
                 .build();
     }
 
+    /**
+     * Formats the input into a Component, splitting on {@code \n} to preserve line breaks.
+     */
     public Component format(String input) {
         if (input == null || input.isEmpty()) {
             return Component.empty();
         }
 
+        String[] lines = input.split("\\n", -1);
+        Component result = Component.empty();
+        for (int i = 0; i < lines.length; i++) {
+            result = result.append(formatLine(lines[i]));
+            if (i < lines.length - 1) {
+                result = result.append(Component.newline());
+            }
+        }
+        return result;
+    }
+
+    private Component formatLine(String line) {
         return switch (mode) {
-            case MINIMESSAGE -> parseMiniMessage(input);
-            case LEGACY -> parseLegacy(input);
-            case MIXED -> parseMixed(input);
+            case MINIMESSAGE -> miniMessage.deserialize(line);
+            case LEGACY -> parseLegacy(line);
+            case MIXED -> looksLikeMiniMessage(line) ? miniMessage.deserialize(line) : parseLegacy(line);
         };
-    }
-
-    public String serializeLegacy(Component component) {
-        return legacySerializer.serialize(component);
-    }
-
-    public String serializePlain(Component component) {
-        return PlainTextComponentSerializer.plainText().serialize(component);
-    }
-
-    private Component parseMiniMessage(String input) {
-        String normalized = normalizeHexForMiniMessage(input);
-        return miniMessage.deserialize(normalized);
     }
 
     private Component parseLegacy(String input) {
@@ -61,29 +64,8 @@ public final class TextFormatter {
         return legacySerializer.deserialize(normalized);
     }
 
-    private Component parseMixed(String input) {
-        if (looksLikeMiniMessage(input)) {
-            return parseMiniMessage(input);
-        }
-        return parseLegacy(input);
-    }
-
     private boolean looksLikeMiniMessage(String input) {
-        if (MINIMESSAGE_TAG_PATTERN.matcher(input).find()) {
-            return true;
-        }
-        String normalized = normalizeHexForMiniMessage(input);
-        return MINIMESSAGE_TAG_PATTERN.matcher(normalized).find();
-    }
-
-    private String normalizeHexForMiniMessage(String input) {
-        Matcher matcher = HEX_PATTERN.matcher(input);
-        StringBuilder sb = new StringBuilder();
-        while (matcher.find()) {
-            matcher.appendReplacement(sb, "<#" + matcher.group(1).toUpperCase() + ">");
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
+        return input.indexOf('<') >= 0 && MINIMESSAGE_TAG_PATTERN.matcher(input).find();
     }
 
     private String normalizeHexForLegacy(String input) {
@@ -99,6 +81,14 @@ public final class TextFormatter {
         }
         matcher.appendTail(sb);
         return sb.toString();
+    }
+
+    public String serializeLegacy(Component component) {
+        return legacySerializer.serialize(component);
+    }
+
+    public String serializePlain(Component component) {
+        return PlainTextComponentSerializer.plainText().serialize(component);
     }
 
     public enum Mode {
