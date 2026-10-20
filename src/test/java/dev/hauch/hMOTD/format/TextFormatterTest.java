@@ -20,44 +20,48 @@ class TextFormatterTest {
     }
 
     @Test
-    void testMiniMessageParsing() {
+    void testMiniMessageColorParsing() {
         Component component = miniMessageFormatter.format("<red>Hello <blue>World");
         assertEquals("Hello World", plain(component));
         assertEquals(TextColor.color(0xFF5555), component.color());
     }
 
     @Test
-    void testHexColorParsing() {
-        Component component = mixedFormatter.format("#00FF00Hello");
+    void testMiniMessageHexNative() {
+        Component component = miniMessageFormatter.format("<#00FF00>Hello");
         assertEquals("Hello", plain(component));
         assertEquals(TextColor.color(0x00FF00), component.color());
     }
 
     @Test
-    void testMixedFormatDetection() {
-        Component miniMessage = mixedFormatter.format("<green>Hello");
-        Component legacy = mixedFormatter.format("&aHello");
-        assertEquals("Hello", plain(miniMessage));
-        assertEquals("Hello", plain(legacy));
+    void testLegacyHexColorParsing() {
+        Component component = legacyFormatter.format("#00FF00Hello");
+        assertEquals("Hello", plain(component));
+        assertEquals(TextColor.color(0x00FF00), component.color());
+    }
+
+    @Test
+    void testMixedFormatDetectsMiniMessage() {
+        Component component = mixedFormatter.format("<green>Hello");
+        assertEquals("Hello", plain(component));
+    }
+
+    @Test
+    void testMixedFormatDetectsLegacy() {
+        Component component = mixedFormatter.format("&aHello");
+        assertEquals("Hello", plain(component));
+    }
+
+    @Test
+    void testLineBreakSupport() {
+        Component component = mixedFormatter.format("&aHello\n&bWorld");
+        assertEquals("Hello\nWorld", plain(component));
     }
 
     @Test
     void testEmptyInput() {
         Component component = mixedFormatter.format("");
         assertEquals(Component.empty(), component);
-    }
-
-    @Test
-    void testLegacyHexColor() {
-        Component component = legacyFormatter.format("&#FF0000Red");
-        assertEquals("Red", plain(component));
-        assertEquals(TextColor.color(0xFF0000), component.color());
-    }
-
-    @Test
-    void testMixedFormatAutoDetectsLegacy() {
-        Component component = mixedFormatter.format("&aHello &cWorld");
-        assertEquals("Hello World", plain(component));
     }
 
     private String plain(Component component) {
