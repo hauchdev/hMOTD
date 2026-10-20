@@ -114,6 +114,9 @@ public final class hMOTDConfig {
         @Comment("Maximum width in pixels used for centering calculations")
         private int width = 248;
 
+        @Comment("Width of a single space character in pixels (default Minecraft value is 4)")
+        private int spaceWidth = 4;
+
         public CenterConfig() {
         }
 
@@ -123,6 +126,10 @@ public final class hMOTDConfig {
 
         public int width() {
             return width;
+        }
+
+        public int spaceWidth() {
+            return spaceWidth;
         }
     }
 
