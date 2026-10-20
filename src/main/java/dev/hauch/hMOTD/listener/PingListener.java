@@ -4,7 +4,6 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.util.Favicon;
-import dev.hauch.hMOTD.cache.IconCache;
 import dev.hauch.hMOTD.cache.IconManager;
 import dev.hauch.hMOTD.config.hMOTDConfig;
 import dev.hauch.hMOTD.format.TextFormatter;
