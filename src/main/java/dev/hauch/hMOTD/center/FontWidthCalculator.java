@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Approximates the visual width of characters using Minecraft's default font metrics.
+ * Provides visual character widths based on Minecraft's default font metrics.
+ * Format codes ({@code §} / {@code &} plus one character) are ignored because they have zero visible width.
  */
 public final class FontWidthCalculator {
 
@@ -12,7 +13,7 @@ public final class FontWidthCalculator {
     private static final Map<Character, Integer> WIDTHS = new HashMap<>();
 
     static {
-        // Space
+        // Whitespace
         WIDTHS.put(' ', 3);
 
         // Symbols
@@ -23,8 +24,8 @@ public final class FontWidthCalculator {
         WIDTHS.put('%', 5);
         WIDTHS.put('&', 5);
         WIDTHS.put('\'', 1);
-        WIDTHS.put('(', 3);
-        WIDTHS.put(')', 3);
+        WIDTHS.put('(', 4);
+        WIDTHS.put(')', 4);
         WIDTHS.put('*', 3);
         WIDTHS.put('+', 5);
         WIDTHS.put(',', 1);
@@ -32,7 +33,7 @@ public final class FontWidthCalculator {
         WIDTHS.put('.', 1);
         WIDTHS.put('/', 5);
 
-        // Numbers
+        // Digits
         for (char c = '0'; c <= '9'; c++) {
             WIDTHS.put(c, 5);
         }
@@ -47,9 +48,8 @@ public final class FontWidthCalculator {
         WIDTHS.put('@', 6);
 
         // Uppercase letters
-        String upperNarrow = "I";
         for (char c = 'A'; c <= 'Z'; c++) {
-            WIDTHS.put(c, upperNarrow.indexOf(c) >= 0 ? 3 : 5);
+            WIDTHS.put(c, c == 'I' ? 3 : 5);
         }
 
         WIDTHS.put('[', 3);
@@ -59,18 +59,36 @@ public final class FontWidthCalculator {
         WIDTHS.put('_', 5);
         WIDTHS.put('`', 2);
 
-        // Lowercase letters
-        Map<Character, Integer> lowerWidths = Map.of(
+        // Lowercase letters with accurate widths
+        Map<Character, Integer> lower = Map.of(
+                'a', 5,
+                'b', 5,
+                'c', 5,
+                'd', 5,
+                'e', 5,
                 'f', 4,
+                'g', 5,
+                'h', 5,
                 'i', 1,
                 'j', 5,
                 'k', 4,
                 'l', 1,
-                't', 3
+                'm', 5,
+                'n', 5,
+                'o', 5,
+                'p', 5,
+                'q', 5,
+                'r', 5,
+                's', 5,
+                't', 3,
+                'u', 5,
+                'v', 5,
+                'w', 5,
+                'x', 5,
+                'y', 5,
+                'z', 5
         );
-        for (char c = 'a'; c <= 'z'; c++) {
-            WIDTHS.put(c, lowerWidths.getOrDefault(c, 5));
-        }
+        WIDTHS.putAll(lower);
 
         WIDTHS.put('{', 3);
         WIDTHS.put('|', 1);
@@ -85,6 +103,9 @@ public final class FontWidthCalculator {
         return WIDTHS.getOrDefault(c, DEFAULT_WIDTH);
     }
 
+    /**
+     * Calculates the visible width of a string, ignoring Minecraft format codes.
+     */
     public static int widthOf(String text) {
         if (text == null || text.isEmpty()) {
             return 0;
