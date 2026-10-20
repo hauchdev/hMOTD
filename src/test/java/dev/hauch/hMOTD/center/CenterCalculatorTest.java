@@ -54,4 +54,11 @@ class CenterCalculatorTest {
         String centered = CenterCalculator.center("A", 21, 4);
         assertEquals("  A", centered);
     }
+
+    @Test
+    void testCenteringPreservesFormatting() {
+        String original = "<gradient:#00FF00:#0000FF>hMOTD";
+        String centered = CenterCalculator.center(original, 248, 4);
+        assertTrue(centered.endsWith(original));
+    }
 }
