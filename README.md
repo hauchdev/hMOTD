@@ -38,9 +38,9 @@ See `src/main/resources/config.yml` for the full default configuration with comm
 
 ```yaml
 motds:
-  - "<gradient:#00FF00:#0000FF>hMOTD</gradient> <white>Optimized MOTD"
+  - "<gradient:#00FF00:#0000FF>hMOTD</gradient>\n<white>Optimized MOTD for Velocity"
   - "&aWelcome to &6&lhMOTD &r&7- &e%online%/%max% players"
-  - "<#FF5555>%server_name% &bwith mixed formats"
+  - "#FF5555%server_name% &bwith mixed formats"
 
 rotation-mode: RANDOM
 format-mode: MIXED
@@ -48,6 +48,7 @@ format-mode: MIXED
 center:
   enabled: true
   width: 248
+  space-width: 4
 
 icon:
   enabled: true
@@ -80,13 +81,23 @@ debug: false
 
 ## Format Modes
 
-- `MINIMESSAGE`: Only parse MiniMessage tags (`<red>`, `<gradient>`, `<#RRGGBB>`, etc.).
-- `LEGACY`: Only parse legacy `&` codes and hex colors converted to legacy format.
-- `MIXED`: Automatically detects whether the input is MiniMessage or legacy and parses accordingly.
+- `MINIMESSAGE`: Only parse MiniMessage tags (`<red>`, `<gradient>`, `<#RRGGBB>`, etc.). Standalone hex colors like `#RRGGBB` are also supported.
+- `LEGACY`: Only parse legacy `&` codes and hex colors converted to legacy `§x§R§R§G§G§B§B` format.
+- `MIXED`: Automatically detects whether the input is MiniMessage or legacy and parses accordingly. You can safely mix tags and standalone hex colors.
+
+## Multi-line MOTDs
+
+Use `\n` inside any MOTD string to split it into multiple lines. Each line is centered independently when centering is enabled.
 
 ## Centering
 
-When `center.enabled` is `true`, hMOTD strips visible formatting codes and tags, calculates the rendered width using an internal Minecraft font width table, and prepends spaces so the MOTD appears centered in the server list.
+When `center.enabled` is `true`, hMOTD:
+1. Splits the MOTD into lines.
+2. Strips visible formatting codes and tags from each line.
+3. Calculates the rendered width using an accurate Minecraft default font width table.
+4. Prepends spaces (using `center.space-width`, default `4`) so each line appears centered in the server list.
+
+The default `center.width` of `248` matches the MOTD area of the vanilla Minecraft server list.
 
 ## License
 
