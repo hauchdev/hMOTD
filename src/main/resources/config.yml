@@ -2,10 +2,11 @@
 # A highly optimized Velocity MOTD plugin supporting MiniMessage, legacy '&' codes and hex colors.
 
 # List of MOTDs to display. Supports MiniMessage, legacy '&' codes, and hex colors (#RRGGBB / &#RRGGBB).
+# Use \n for multi-line MOTDs.
 motds:
-  - "<gradient:#00FF00:#0000FF>hMOTD</gradient> <white>Optimized MOTD"
+  - "<gradient:#00FF00:#0000FF>hMOTD</gradient>\n<white>Optimized MOTD for Velocity"
   - "&aWelcome to &6&lhMOTD &r&7- &eSuper optimized"
-  - "<#FF5555>Custom MOTD &bwith mixed formats"
+  - "<red>Custom MOTD &bwith mixed formats"
 
 # How to pick the MOTD: RANDOM, SEQUENTIAL, DISABLED
 rotation-mode: RANDOM
@@ -19,6 +20,8 @@ center:
   enabled: true
   # Maximum width in pixels used for centering calculations (default Minecraft server list MOTD width)
   width: 248
+  # Width of a single space character in pixels (default Minecraft value is 4)
+  space-width: 4
 
 # Server icon configuration
 icon:
