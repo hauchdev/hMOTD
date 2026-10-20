@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Selects, caches and renders the next MOTD according to the active configuration.
- * Handles rotation modes, placeholder replacement and optional centering.
+ * Handles rotation modes, placeholder replacement and optional line-by-line centering.
  */
 public final class MOTDManager {
 
@@ -79,7 +79,7 @@ public final class MOTDManager {
                 ? placeholderResolver.resolve(raw, cfg.extraPlaceholders())
                 : raw;
         String centered = cfg.center().enabled()
-                ? CenterCalculator.center(withPlaceholders, cfg.center().width())
+                ? CenterCalculator.center(withPlaceholders, cfg.center().width(), cfg.center().spaceWidth())
                 : withPlaceholders;
         return formatter.get().format(centered);
     }
