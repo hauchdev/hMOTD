@@ -124,12 +124,24 @@ public final class hMOTDConfig {
             return enabled;
         }
 
+        public void enabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
         public int width() {
             return width;
         }
 
+        public void width(int width) {
+            this.width = width;
+        }
+
         public int spaceWidth() {
             return spaceWidth;
+        }
+
+        public void spaceWidth(int spaceWidth) {
+            this.spaceWidth = spaceWidth;
         }
     }
 
