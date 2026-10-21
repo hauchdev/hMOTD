@@ -30,7 +30,7 @@ A highly optimized **Velocity** MOTD plugin inspired by [MiniMOTD](https://githu
 
 ## Permissions
 
-- `hmotd.reload` — Allows using `/hmotd reload`.
+- `hmotd.reload` — Allows using `/hmotd reload` and `/hmotd preview`.
 
 ## Configuration
 
@@ -49,8 +49,9 @@ format-mode: MIXED
 
 center:
   enabled: true
-  width: 248
-  space-width: 4
+  mode: CENTER
+  width: 270
+  offset: 0
 
 icon:
   enabled: true
@@ -91,15 +92,37 @@ debug: false
 
 Use `\n` inside any MOTD string to split it into multiple lines. Each line is centered independently when centering is enabled.
 
-## Centering
+## Centering & alignment
 
-When `center.enabled` is `true`, hMOTD:
-1. Splits the MOTD into lines.
-2. Strips visible formatting codes and tags from each line.
-3. Calculates the rendered width using an accurate Minecraft default font width table.
-4. Prepends spaces (using `center.space-width`, default `4`) so each line appears centered in the server list.
+The Minecraft server list renders the MOTD left aligned inside a fixed text area, so exact centering
+has to be emulated by prefixing each line with space characters. hMOTD does this with **pixel
+accurate** measurements:
 
-The default `center.width` of `248` matches the MOTD area of the vanilla Minecraft server list.
+1. The line is rendered into an Adventure `Component` (MiniMessage / legacy).
+2. The real advance width of every glyph is looked up in a table extracted from the vanilla
+   `assets/minecraft/font` definitions. The table contains the *advance* (glyph width plus left
+   bearing) for regular **and bold** text, because bold glyphs are rendered wider.
+3. The padding is computed in pixels and converted into whole spaces (a space is 4 pixels wide).
+4. Multi line MOTDs are aligned line by line, so every line is centered individually.
+
+### Settings
+
+```yaml
+center:
+  enabled: true
+  # LEFT, CENTER or RIGHT
+  mode: CENTER
+  # Width of the server list text area in pixels.
+  # 270 matches the vanilla server list and is the value used by most MOTD plugins.
+  width: 270
+  # Fine tuning offset in pixels, positive moves the text to the right
+  offset: 0
+```
+
+Because the padding can only be applied in whole spaces the result can be off by at most two pixels.
+If the text does not look perfectly centered on your resolution, adjust `center.offset`.
+
+Use `/hmotd preview` to see the rendered MOTD and the active alignment settings in game.
 
 ## License
 
