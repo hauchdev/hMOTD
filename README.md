@@ -1,6 +1,9 @@
 # hMOTD
 
 ![Java CI](https://github.com/Hauchdev/hMOTD/actions/workflows/ci.yml/badge.svg)
+![Release](https://github.com/Hauchdev/hMOTD/actions/workflows/release.yml/badge.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Maven Central](https://img.shields.io/maven-central/v/dev.hauch/hMOTD.svg)
 
 A highly optimized **Velocity** MOTD plugin inspired by [MiniMOTD](https://github.com/jpenilla/MiniMOTD), built from the ground up for performance and flexibility.
 
@@ -30,6 +33,25 @@ A highly optimized **Velocity** MOTD plugin inspired by [MiniMOTD](https://githu
 2. Copy `target/hMOTD-*.jar` to your Velocity `plugins/` folder.
 3. Start the proxy to generate the default configuration.
 4. Edit `plugins/hMOTD/config.yml` and run `/hmotd reload`.
+
+## Downloads
+
+Pre-built releases are published on every `v*` tag:
+
+* [GitHub Releases](https://github.com/Hauchdev/hMOTD/releases) — plugin, sources, javadoc and checksums
+* [Maven Central](https://central.sonatype.com/artifact/dev.hauch/hMOTD) — `dev.hauch:hMOTD`
+* [Modrinth](https://modrinth.com/plugin/hmotd) — updated automatically after every release
+
+Every release contains three artifacts:
+
+| File | Description |
+| --- | --- |
+| `hMOTD-<version>.jar` | The plugin, this is the file you need |
+| `hMOTD-<version>-sources.jar` | Sources |
+| `hMOTD-<version>-javadoc.jar` | API documentation |
+
+The artifacts are signed with GPG and a `checksums.txt` file with the SHA-256 sums is attached to
+every release.
 
 ## Permissions
 
@@ -131,3 +153,8 @@ Use `/hmotd preview` to see the rendered MOTD and the active alignment settings 
 ## License
 
 This project is licensed under the MIT License. See `LICENSE` for details.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup and
+[RELEASE.md](RELEASE.md) for the release process.
