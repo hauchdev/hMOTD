@@ -170,10 +170,9 @@
                 <version>3.0.1</version>
                 <configuration>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
                     <scmCommentPrefix xml:space="preserve">[RELEASE] </scmCommentPrefix>
-                    <goals>install deploy site-deploy
-                    </goals> <!-- install is here to fix javadoc generation in multi-module projects -->
+                    <goals>install deploy</goals>
                     <releaseProfiles>release</releaseProfiles>
                 </configuration>
             </plugin>
