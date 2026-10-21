@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MOTDManagerTest {
@@ -108,6 +110,28 @@ class MOTDManagerTest {
         assertTrue(result.endsWith("Hello"));
         // 270 - 24 = 246 -> 61 spaces
         assertTrue(result.startsWith(" ".repeat(61)));
+    }
+
+    @Test
+    void testStaticMotdIsCached() {
+        hMOTDConfig config = new hMOTDConfig();
+        config.motds().clear();
+        config.motds().add("Static MOTD");
+        config.center().enabled(false);
+
+        MOTDManager manager = new MOTDManager(logger, resolver, config);
+        assertSame(manager.nextMOTD(), manager.nextMOTD());
+    }
+
+    @Test
+    void testDynamicMotdIsNotCached() {
+        hMOTDConfig config = new hMOTDConfig();
+        config.motds().clear();
+        config.motds().add("Players: %online%");
+        config.center().enabled(false);
+
+        MOTDManager manager = new MOTDManager(logger, resolver, config);
+        assertNotSame(manager.nextMOTD(), manager.nextMOTD());
     }
 
     @Test

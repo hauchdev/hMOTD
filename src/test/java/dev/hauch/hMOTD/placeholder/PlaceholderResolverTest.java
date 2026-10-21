@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PlaceholderResolverTest {
 
@@ -26,5 +28,20 @@ class PlaceholderResolverTest {
     void testEmptyInput() {
         PlaceholderResolver resolver = new PlaceholderResolver(null);
         assertEquals("", resolver.resolve("", Map.of()));
+    }
+
+    @Test
+    void testDynamicPlaceholdersAreDetected() {
+        PlaceholderResolver resolver = new PlaceholderResolver(null);
+        assertTrue(resolver.containsDynamicPlaceholder("Players: %online%"));
+        assertTrue(resolver.containsDynamicPlaceholder("Time: %time%"));
+        assertFalse(resolver.containsDynamicPlaceholder("Static %name% text"));
+        assertFalse(resolver.containsDynamicPlaceholder(""));
+    }
+
+    @Test
+    void testBuiltInPlaceholdersResolveWithoutProxy() {
+        PlaceholderResolver resolver = new PlaceholderResolver(null);
+        assertEquals("0 players", resolver.resolve("%online% players", Map.of()));
     }
 }

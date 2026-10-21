@@ -61,6 +61,12 @@ public final class MOTDManager {
             return Component.empty();
         }
 
+        // MOTDs using live placeholders must be re-rendered on every ping, otherwise the cached
+        // component would show outdated values.
+        if (placeholderResolver.containsDynamicPlaceholder(raw)) {
+            return buildComponent(raw);
+        }
+
         return cache.computeIfAbsent(raw, this::buildComponent);
     }
 

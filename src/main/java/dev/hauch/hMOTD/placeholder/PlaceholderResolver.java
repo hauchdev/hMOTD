@@ -26,14 +26,29 @@ public final class PlaceholderResolver {
     }
 
     private void registerDefaults() {
-        if (proxyServer == null) {
-            return;
-        }
-        dynamicPlaceholders.put("online", () -> String.valueOf(proxyServer.getPlayerCount()));
-        dynamicPlaceholders.put("max", () -> String.valueOf(proxyServer.getConfiguration().getShowMaxPlayers()));
-        dynamicPlaceholders.put("proxy_name", () -> proxyServer.getConfiguration().getMotd().toString());
+        dynamicPlaceholders.put("online", () -> proxyServer == null ? "0" : String.valueOf(proxyServer.getPlayerCount()));
+        dynamicPlaceholders.put("max", () -> proxyServer == null ? "0" : String.valueOf(proxyServer.getConfiguration().getShowMaxPlayers()));
+        dynamicPlaceholders.put("proxy_name", () -> proxyServer == null ? "" : proxyServer.getConfiguration().getMotd().toString());
         dynamicPlaceholders.put("time", () -> LocalDateTime.now().format(TIME_FORMATTER));
         dynamicPlaceholders.put("date", () -> LocalDateTime.now().format(DATE_FORMATTER));
+    }
+
+    /**
+     * Checks whether the given text contains a placeholder whose value changes over time.
+     * <p>
+     * MOTDs using such placeholders must not be cached because the rendered result would become
+     * stale.
+     */
+    public boolean containsDynamicPlaceholder(String input) {
+        if (input == null || input.isEmpty()) {
+            return false;
+        }
+        for (String key : dynamicPlaceholders.keySet()) {
+            if (input.contains("%" + key + "%")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void register(String key, Supplier<String> supplier) {
