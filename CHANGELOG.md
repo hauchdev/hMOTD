@@ -27,8 +27,8 @@
 - The user configuration file is no longer rewritten on every reload.
 
 ### Infrastructure
-- GitHub Actions pipeline that publishes a signed GitHub Release for every `v*` tag, including the
-  plugin, the sources, the javadoc, the detached GPG signatures and a `checksums.txt`.
+- GitHub Actions pipeline that publishes a GitHub Release for every `v*` tag, including the plugin,
+  the sources, the javadoc and a `checksums.txt`. No secrets are required.
 - The release notes are generated automatically from the matching section of this changelog.
 - The packaged plugin descriptor is verified before the release is published.
 - Dependabot keeps the Maven dependencies and the GitHub Actions up to date.
