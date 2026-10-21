@@ -6,7 +6,9 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +22,8 @@ public final class TextFormatter {
     private static final Pattern HEX_PATTERN = Pattern.compile("(?:&#|#)([0-9a-fA-F]{6})");
     private static final Pattern MINIMESSAGE_TAG_PATTERN = Pattern.compile("<(?:/?[a-zA-Z_#][a-zA-Z0-9_:#\\-]*)>");
 
+    private static final Map<Mode, TextFormatter> INSTANCES = new EnumMap<>(Mode.class);
+
     private final Mode mode;
     private final MiniMessage miniMessage;
     private final LegacyComponentSerializer legacySerializer;
@@ -31,6 +35,14 @@ public final class TextFormatter {
                 .hexColors()
                 .useUnusualXRepeatedCharacterHexFormat()
                 .build();
+    }
+
+    /**
+     * Returns a shared formatter for the given mode. Formatters are immutable and therefore safe
+     * to share, which avoids re-creating the MiniMessage and legacy serializers on every call.
+     */
+    public static TextFormatter of(Mode mode) {
+        return INSTANCES.computeIfAbsent(mode, TextFormatter::new);
     }
 
     /**

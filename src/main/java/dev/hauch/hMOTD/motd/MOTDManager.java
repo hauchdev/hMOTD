@@ -46,7 +46,7 @@ public final class MOTDManager {
     }
 
     private TextFormatter createFormatter(hMOTDConfig config) {
-        return new TextFormatter(TextFormatter.Mode.valueOf(config.formatMode().name()));
+        return TextFormatter.of(TextFormatter.Mode.valueOf(config.formatMode().name()));
     }
 
     public Component nextMOTD() {

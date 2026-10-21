@@ -27,7 +27,6 @@ public final class PingListener {
     private final MOTDManager motdManager;
     private final IconManager iconManager;
     private final PlaceholderResolver placeholderResolver;
-    private final TextFormatter formatter;
     private final Logger logger;
 
     public PingListener(AtomicReference<hMOTDConfig> config, MOTDManager motdManager, IconManager iconManager, PlaceholderResolver placeholderResolver, Logger logger) {
@@ -35,8 +34,11 @@ public final class PingListener {
         this.motdManager = motdManager;
         this.iconManager = iconManager;
         this.placeholderResolver = placeholderResolver;
-        this.formatter = new TextFormatter(TextFormatter.Mode.MIXED);
         this.logger = logger;
+    }
+
+    private TextFormatter formatter(hMOTDConfig cfg) {
+        return TextFormatter.of(TextFormatter.Mode.valueOf(cfg.formatMode().name()));
     }
 
     @Subscribe
@@ -98,6 +100,7 @@ public final class PingListener {
 
         List<ServerPing.SamplePlayer> sample = new ArrayList<>();
         if (info.overrideSample() && info.sampleLines() != null && !info.sampleLines().isEmpty()) {
+            TextFormatter formatter = formatter(cfg);
             for (String line : info.sampleLines()) {
                 String resolved = resolvePlaceholders(line, cfg);
                 Component component = formatter.format(resolved);
@@ -122,6 +125,7 @@ public final class PingListener {
         int protocol = Optional.ofNullable(original.getVersion())
                 .map(ServerPing.Version::getProtocol)
                 .orElse(0);
+        TextFormatter formatter = formatter(cfg);
         String resolvedVersion = resolvePlaceholders(info.versionText(), cfg);
         Component versionComponent = formatter.format(resolvedVersion);
         builder.version(new ServerPing.Version(protocol, formatter.serializeLegacy(versionComponent)));
