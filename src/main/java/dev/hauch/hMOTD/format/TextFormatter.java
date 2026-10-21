@@ -5,6 +5,8 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,15 +41,31 @@ public final class TextFormatter {
             return Component.empty();
         }
 
-        String[] lines = input.split("\\n", -1);
+        List<Component> lines = formatLines(input);
         Component result = Component.empty();
-        for (int i = 0; i < lines.length; i++) {
-            result = result.append(formatLine(lines[i]));
-            if (i < lines.length - 1) {
+        for (int i = 0; i < lines.size(); i++) {
+            result = result.append(lines.get(i));
+            if (i < lines.size() - 1) {
                 result = result.append(Component.newline());
             }
         }
         return result;
+    }
+
+    /**
+     * Formats the input into one Component per line. The returned list is never empty.
+     */
+    public List<Component> formatLines(String input) {
+        if (input == null || input.isEmpty()) {
+            return List.of(Component.empty());
+        }
+
+        String[] split = input.split("\\n", -1);
+        List<Component> lines = new ArrayList<>(split.length);
+        for (String line : split) {
+            lines.add(formatLine(line));
+        }
+        return lines;
     }
 
     private Component formatLine(String line) {
