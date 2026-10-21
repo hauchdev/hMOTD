@@ -97,6 +97,9 @@ $RECYCLE.BIN/
 
 target/
 .maven/
+RELEASE_NOTES.md
+verify/
+dist/
 
 pom.xml.tag
 pom.xml.releaseBackup
