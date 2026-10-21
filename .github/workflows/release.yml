@@ -7,16 +7,26 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag that should be released (for example v1.1.0)'
+        description: 'Tag to release, for example v1.1.0'
         required: true
+      draft:
+        description: 'Create the release as a draft'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
+
+concurrency:
+  group: release-${{ github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
 
 jobs:
   release:
     name: Build and publish release
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.inputs.tag || github.ref_name }}
 
     steps:
       - name: Checkout
@@ -31,8 +41,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Build with Maven
-        run: mvn -B -Prelease clean package -Dgpg.skip=true
+      - name: Read the project version
+        id: project
+        run: echo "version=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)" >> "$GITHUB_OUTPUT"
 
       - name: Import GPG key
         if: ${{ secrets.GPG_PRIVATE_KEY != '' }}
@@ -42,14 +53,26 @@ jobs:
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
           gpg --list-secret-keys --keyid-format=long
 
-      - name: Sign artifacts
-        if: ${{ secrets.GPG_PRIVATE_KEY != '' }}
+      - name: Build, test and sign
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-        run: mvn -B -Prelease gpg:sign
+        run: mvn -B -Prelease clean verify "-Dgpg.skip=${{ secrets.GPG_PRIVATE_KEY == '' }}"
+
+      - name: Verify the plugin descriptor
+        run: |
+          set -euo pipefail
+          JAR="target/hMOTD-${{ steps.project.outputs.version }}.jar"
+          test -f "$JAR"
+          rm -rf verify && mkdir verify
+          (cd verify && jar xf "../$JAR" velocity-plugin.json)
+          grep -q "\"version\": \"${{ steps.project.outputs.version }}\"" verify/velocity-plugin.json
+          grep -q '"main": "dev.hauch.hMOTD.HMOTD"' verify/velocity-plugin.json
+          rm -rf verify
+          echo "Plugin descriptor verified"
 
       - name: Collect release assets
         run: |
+          set -euo pipefail
           mkdir -p dist
           cp target/*.jar dist/
           cp target/*.jar.asc dist/ 2>/dev/null || true
@@ -57,68 +80,38 @@ jobs:
           sha256sum *.jar > checksums.txt
           cat checksums.txt
 
+      - name: Prepare release notes
+        run: |
+          set -euo pipefail
+          VERSION="${{ steps.project.outputs.version }}"
+          {
+            echo "### Installation"
+            echo
+            echo "1. Download \`hMOTD-${VERSION}.jar\` (the file without \`-sources\` or \`-javadoc\`)."
+            echo "2. Copy it into the \`plugins\` folder of your Velocity proxy."
+            echo "3. Start the proxy, edit \`plugins/hMOTD/config.yml\` and run \`/hmotd reload\`."
+            echo
+            echo "### Requirements"
+            echo
+            echo "* Java 21 or newer"
+            echo "* Velocity 3.x"
+            echo
+            if [ -f CHANGELOG.md ]; then
+              awk "/^## ${VERSION}\$/{flag=1; next} /^## /{flag=0} flag" CHANGELOG.md >> RELEASE_NOTES.md
+            fi
+          } > RELEASE_NOTES.md
+          cat RELEASE_NOTES.md
+
       - name: Publish to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
-          name: ${{ github.event.inputs.tag || github.ref_name }}
-          body: |
-            ### Installation
-
-            1. Download `hMOTD-*.jar` (the file without `-sources` or `-javadoc`).
-            2. Copy it into the `plugins` folder of your Velocity proxy.
-            3. Start the proxy, edit `plugins/hMOTD/config.yml` and run `/hmotd reload`.
-
-            ### Requirements
-
-            * Java 21 or newer
-            * Velocity 3.x
+          tag_name: ${{ env.TAG }}
+          name: hMOTD ${{ steps.project.outputs.version }}
+          body_path: RELEASE_NOTES.md
+          draft: ${{ inputs.draft || false }}
+          prerelease: ${{ contains(env.TAG, '-') }}
           files: |
             dist/*.jar
             dist/*.jar.asc
             dist/checksums.txt
           fail_on_unmatched_files: false
-
-  publish-central:
-    name: Publish to Maven Central
-    runs-on: ubuntu-latest
-    if: ${{ secrets.MAVEN_CENTRAL_USERNAME != '' && secrets.MAVEN_CENTRAL_PASSWORD != '' }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-          cache: maven
-
-      - name: Write Maven settings
-        env:
-          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
-          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-        run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml <<EOF
-          <settings>
-            <servers>
-              <server>
-                <id>ossrh</id>
-                <username>${MAVEN_CENTRAL_USERNAME}</username>
-                <password>${MAVEN_CENTRAL_PASSWORD}</password>
-              </server>
-            </servers>
-          </settings>
-          EOF
-
-      - name: Import GPG key
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-        run: echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-
-      - name: Deploy
-        env:
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-        run: mvn -B -Prelease clean deploy
