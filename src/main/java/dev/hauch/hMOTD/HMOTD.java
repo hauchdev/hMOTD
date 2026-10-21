@@ -9,7 +9,7 @@ import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import dev.hauch.hMOTD.cache.IconCache;
 import dev.hauch.hMOTD.cache.IconManager;
-import dev.hauch.hMOTD.command.ReloadCommand;
+import dev.hauch.hMOTD.command.HMOTDCommand;
 import dev.hauch.hMOTD.config.ConfigLoader;
 import dev.hauch.hMOTD.config.hMOTDConfig;
 import dev.hauch.hMOTD.listener.PingListener;
@@ -57,7 +57,7 @@ public class HMOTD {
         CommandManager commandManager = proxyServer.getCommandManager();
         commandManager.register(
                 commandManager.metaBuilder("hmotd").build(),
-                new ReloadCommand(logger, configLoader, config, motdManager)
+                new HMOTDCommand(logger, configLoader, config, motdManager)
         );
 
         logger.info("hMOTD enabled with {} MOTD(s) in {} mode",
