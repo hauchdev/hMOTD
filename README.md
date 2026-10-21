@@ -3,7 +3,6 @@
 ![Java CI](https://github.com/Hauchdev/hMOTD/actions/workflows/ci.yml/badge.svg)
 ![Release](https://github.com/Hauchdev/hMOTD/actions/workflows/release.yml/badge.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Maven Central](https://img.shields.io/maven-central/v/dev.hauch/hMOTD.svg)
 
 A highly optimized **Velocity** MOTD plugin inspired by [MiniMOTD](https://github.com/jpenilla/MiniMOTD), built from the ground up for performance and flexibility.
 
@@ -36,11 +35,9 @@ A highly optimized **Velocity** MOTD plugin inspired by [MiniMOTD](https://githu
 
 ## Downloads
 
-Pre-built releases are published on every `v*` tag:
+Pre-built releases are published on GitHub with every `v*` tag:
 
 * [GitHub Releases](https://github.com/Hauchdev/hMOTD/releases) — plugin, sources, javadoc and checksums
-* [Maven Central](https://central.sonatype.com/artifact/dev.hauch/hMOTD) — `dev.hauch:hMOTD`
-* [Modrinth](https://modrinth.com/plugin/hmotd) — updated automatically after every release
 
 Every release contains three artifacts:
 
