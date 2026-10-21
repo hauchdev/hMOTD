@@ -40,12 +40,11 @@ git push origin v1.2.0
 Pushing the tag triggers `release.yml`, which:
 
 1. reads the project version from `pom.xml`,
-2. imports the GPG key (when the secret is configured) and signs the artifacts,
-3. builds and tests the project with the `release` profile,
-4. verifies that the plugin descriptor inside the JAR contains the correct version and main class,
-5. collects the JARs and generates a `checksums.txt` with the SHA-256 sums,
-6. builds the release notes from the `CHANGELOG.md` section of the released version,
-7. publishes everything as a GitHub Release.
+2. builds and tests the project with the `release` profile,
+3. verifies that the plugin descriptor inside the JAR contains the correct version and main class,
+4. collects the JARs and generates a `checksums.txt` with the SHA-256 sums,
+5. builds the release notes from the `CHANGELOG.md` section of the released version,
+6. publishes everything as a GitHub Release.
 
 The release is marked as a pre-release automatically when the tag contains a dash, for example
 `v1.2.0-beta1`.
@@ -58,17 +57,10 @@ The workflow can also be triggered manually from the **Actions** tab:
 * `draft` — set to `true` to create the release as a draft, so it can be reviewed before it becomes
   public.
 
-## 4. Secrets
+## 4. No secrets required
 
-Only one secret is needed, and it is optional:
-
-| Secret | Description |
-| --- | --- |
-| `GPG_PRIVATE_KEY` | The ASCII armored private GPG key used to sign the artifacts |
-| `MAVEN_GPG_PASSPHRASE` | The passphrase of the GPG key |
-
-When `GPG_PRIVATE_KEY` is not configured the release is still published, the artifacts are just not
-signed. The detached `.asc` signatures are attached to the release as well.
+The workflow needs **no secrets at all**. The `GITHUB_TOKEN` that GitHub provides automatically is
+enough to create the release, because the workflow only requests the `contents: write` permission.
 
 ## 5. Release assets
 
@@ -77,7 +69,6 @@ signed. The detached `.asc` signatures are attached to the release as well.
 | `hMOTD-<version>.jar` | The plugin, this is the file that has to be copied into `plugins/` |
 | `hMOTD-<version>-sources.jar` | Sources |
 | `hMOTD-<version>-javadoc.jar` | API documentation |
-| `*.jar.asc` | GPG signatures, only present when the GPG key is configured |
 | `checksums.txt` | SHA-256 sums of the JARs |
 
 ## Local verification
@@ -85,7 +76,7 @@ signed. The detached `.asc` signatures are attached to the release as well.
 To verify that the release artifacts can be built without publishing anything:
 
 ```bash
-mvn -Prelease clean package -Dgpg.skip=true
+mvn -Prelease clean package
 ```
 
 This produces:
