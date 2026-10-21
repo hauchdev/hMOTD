@@ -20,8 +20,9 @@ class ConfigLoaderTest {
         assertNotNull(config);
         assertFalse(config.motds().isEmpty());
         assertTrue(config.center().enabled());
-        assertEquals(248, config.center().width());
-        assertEquals(4, config.center().spaceWidth());
+        assertEquals(270, config.center().width());
+        assertEquals(hMOTDConfig.AlignMode.CENTER, config.center().mode());
+        assertEquals(0, config.center().offset());
     }
 
     @Test
@@ -31,6 +32,6 @@ class ConfigLoaderTest {
         config.center().width(-10);
         config.validate();
 
-        assertEquals(248, config.center().width());
+        assertEquals(270, config.center().width());
     }
 }

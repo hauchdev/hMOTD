@@ -16,12 +16,14 @@ format-mode: MIXED
 
 # Centering configuration
 center:
-  # Enable automatic MOTD centering based on Minecraft font widths
+  # Enable automatic MOTD alignment based on Minecraft font metrics
   enabled: true
-  # Maximum width in pixels used for centering calculations (default Minecraft server list MOTD width)
-  width: 248
-  # Width of a single space character in pixels (default Minecraft value is 4)
-  space-width: 4
+  # Alignment mode: LEFT, CENTER, RIGHT
+  mode: CENTER
+  # Width of the server list text area in pixels (270 matches the vanilla server list)
+  width: 270
+  # Fine tuning offset in pixels, positive moves the text to the right
+  offset: 0
 
 # Server icon configuration
 icon:
