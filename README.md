@@ -8,13 +8,16 @@ A highly optimized **Velocity** MOTD plugin inspired by [MiniMOTD](https://githu
 
 - **Velocity-first**: Designed exclusively for the Velocity proxy platform.
 - **Multiple text formats**: Supports MiniMessage, legacy `&` color codes, hex colors (`#RRGGBB` / `&#RRGGBB`) and a smart mixed mode.
-- **Automatic MOTD centering**: Calculates Minecraft font widths to center your MOTD in the server list.
+- **Pixel accurate alignment**: Centers your MOTD using the real advance widths of the vanilla Minecraft font, including bold variants.
+- **Alignment modes**: `LEFT`, `CENTER` and `RIGHT` with a configurable text area width and a pixel offset for fine tuning.
+- **Multi-line MOTDs**: Every line is aligned individually, `\n` is supported everywhere.
 - **MOTD rotation**: Random, sequential or disabled rotation across multiple MOTDs.
 - **Rotating server icons**: Use a single icon or a list of icons with rotation modes.
 - **Server info overrides**: Custom version text, fake/max player counts, hover sample lines.
 - **Placeholders**: Built-in `%online%`, `%max%`, `%proxy_name%`, `%time%`, `%date%` plus user-defined extras.
 - **Hot reload**: `/hmotd reload` reloads configuration on the fly.
-- **Optimized**: Parsed components and icons are cached; formatting codes are stripped efficiently for centering.
+- **Preview tools**: `/hmotd preview` and `/hmotd test <text>` show exactly how the MOTD is rendered.
+- **Optimized**: Parsed components and icons are cached, formatters are shared and the font table is a compact packed string.
 
 ## Requirements
 
@@ -90,7 +93,7 @@ debug: false
 
 ## Multi-line MOTDs
 
-Use `\n` inside any MOTD string to split it into multiple lines. Each line is centered independently when centering is enabled.
+Use `\n` inside any MOTD string to split it into multiple lines. Every line is aligned individually.
 
 ## Centering & alignment
 
@@ -119,10 +122,11 @@ center:
   offset: 0
 ```
 
-Because the padding can only be applied in whole spaces the result can be off by at most two pixels.
+Because the padding can only be applied in whole spaces the result can be off by at most one pixel.
 If the text does not look perfectly centered on your resolution, adjust `center.offset`.
 
-Use `/hmotd preview` to see the rendered MOTD and the active alignment settings in game.
+Use `/hmotd preview` to see the rendered MOTD and the active alignment settings in game, and
+`/hmotd test <text>` to check how a specific text would be aligned.
 
 ## License
 
