@@ -46,13 +46,30 @@ class MOTDManagerTest {
         config.motds().clear();
         config.motds().add("A");
         config.center().enabled(true);
-        config.center().width(21);
-        config.center().spaceWidth(4);
+        config.center().width(270);
+        config.center().mode(hMOTDConfig.AlignMode.CENTER);
 
         MOTDManager manager = new MOTDManager(logger, resolver, config);
         String result = plain(manager.nextMOTD());
         assertEquals("A", result.stripLeading());
-        assertTrue(result.startsWith("  ")); // 2 spaces of padding
+        // width of "A" is 6, so (270 - 6) / 2 - 1 = 131 -> 32 spaces
+        assertTrue(result.startsWith(" ".repeat(32)));
+    }
+
+    @Test
+    void testMultiLineCentering() {
+        hMOTDConfig config = new hMOTDConfig();
+        config.motds().clear();
+        config.motds().add("A\nBB");
+        config.center().enabled(true);
+        config.center().width(270);
+
+        MOTDManager manager = new MOTDManager(logger, resolver, config);
+        String[] lines = plain(manager.nextMOTD()).split("\n");
+        assertEquals(2, lines.length);
+        // "A" is 6px wide -> 32 spaces, "BB" is 12px wide -> 32 spaces
+        assertTrue(lines[0].startsWith(" ".repeat(32)));
+        assertTrue(lines[1].startsWith(" ".repeat(32)));
     }
 
     @Test
