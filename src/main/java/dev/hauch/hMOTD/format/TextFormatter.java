@@ -28,6 +28,11 @@ public final class TextFormatter {
     private final MiniMessage miniMessage;
     private final LegacyComponentSerializer legacySerializer;
 
+    /**
+     * Creates a formatter for the given mode.
+     *
+     * @param mode the format mode
+     */
     public TextFormatter(Mode mode) {
         this.mode = mode;
         this.miniMessage = MiniMessage.miniMessage();
@@ -40,6 +45,9 @@ public final class TextFormatter {
     /**
      * Returns a shared formatter for the given mode. Formatters are immutable and therefore safe
      * to share, which avoids re-creating the MiniMessage and legacy serializers on every call.
+     *
+     * @param mode the format mode
+     * @return the shared formatter instance
      */
     public static TextFormatter of(Mode mode) {
         return INSTANCES.computeIfAbsent(mode, TextFormatter::new);
@@ -47,6 +55,9 @@ public final class TextFormatter {
 
     /**
      * Formats the input into a Component, splitting on {@code \n} to preserve line breaks.
+     *
+     * @param input the raw text
+     * @return the formatted component
      */
     public Component format(String input) {
         if (input == null || input.isEmpty()) {
@@ -66,6 +77,9 @@ public final class TextFormatter {
 
     /**
      * Formats the input into one Component per line. The returned list is never empty and is mutable.
+     *
+     * @param input the raw text
+     * @return one component per line
      */
     public List<Component> formatLines(String input) {
         List<Component> lines = new ArrayList<>();
@@ -151,14 +165,29 @@ public final class TextFormatter {
         return sb.toString();
     }
 
+    /**
+     * Serialises a component into the legacy section sign format.
+     *
+     * @param component the component to serialise
+     * @return the legacy formatted string
+     */
     public String serializeLegacy(Component component) {
         return legacySerializer.serialize(component);
     }
 
+    /**
+     * Serialises a component into plain text without any formatting.
+     *
+     * @param component the component to serialise
+     * @return the plain text representation
+     */
     public String serializePlain(Component component) {
         return PlainTextComponentSerializer.plainText().serialize(component);
     }
 
+    /**
+     * Supported text format modes.
+     */
     public enum Mode {
         MINIMESSAGE,
         LEGACY,
