@@ -189,8 +189,17 @@ public final class TextFormatter {
      * Supported text format modes.
      */
     public enum Mode {
+        /**
+         * Only MiniMessage tags are parsed.
+         */
         MINIMESSAGE,
+        /**
+         * Only legacy ampersand codes are parsed.
+         */
         LEGACY,
+        /**
+         * The format is detected automatically.
+         */
         MIXED
     }
 }

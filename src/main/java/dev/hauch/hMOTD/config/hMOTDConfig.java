@@ -55,6 +55,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * The configured MOTDs.
+     *
      * @return the configured MOTDs
      */
     public List<String> motds() {
@@ -62,6 +64,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * The MOTD rotation mode.
+     *
      * @return the MOTD rotation mode
      */
     public RotationMode rotationMode() {
@@ -69,6 +73,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * The text format mode.
+     *
      * @return the text format mode
      */
     public FormatMode formatMode() {
@@ -76,6 +82,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * The alignment configuration.
+     *
      * @return the alignment configuration
      */
     public CenterConfig center() {
@@ -83,6 +91,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * The server icon configuration.
+     *
      * @return the server icon configuration
      */
     public IconConfig icon() {
@@ -90,6 +100,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * The server info overrides.
+     *
      * @return the server info overrides
      */
     public ServerInfoConfig serverInfo() {
@@ -97,6 +109,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * Whether placeholders are replaced.
+     *
      * @return whether placeholders are replaced
      */
     public boolean placeholders() {
@@ -104,6 +118,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * Whether debug logging is enabled.
+     *
      * @return whether debug logging is enabled
      */
     public boolean debug() {
@@ -111,6 +127,8 @@ public final class hMOTDConfig {
     }
 
     /**
+     * The user defined placeholders.
+     *
      * @return the user defined placeholders
      */
     public Map<String, String> extraPlaceholders() {
@@ -161,6 +179,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Whether alignment is enabled.
+         *
          * @return whether alignment is enabled
          */
         public boolean enabled() {
@@ -168,6 +188,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Sets Enabled whether alignment is enabled..
+         *
          * @param enabled whether alignment is enabled
          */
         public void enabled(boolean enabled) {
@@ -175,6 +197,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The alignment mode.
+         *
          * @return the alignment mode
          */
         public AlignMode mode() {
@@ -182,6 +206,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Sets Mode the alignment mode..
+         *
          * @param mode the alignment mode
          */
         public void mode(AlignMode mode) {
@@ -189,6 +215,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The width of the text area in pixels.
+         *
          * @return the width of the text area in pixels
          */
         public int width() {
@@ -196,6 +224,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Sets Width the width of the text area in pixels..
+         *
          * @param width the width of the text area in pixels
          */
         public void width(int width) {
@@ -203,6 +233,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The fine tuning offset in pixels.
+         *
          * @return the fine tuning offset in pixels
          */
         public int offset() {
@@ -210,6 +242,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Sets Offset the fine tuning offset in pixels..
+         *
          * @param offset the fine tuning offset in pixels
          */
         public void offset(int offset) {
@@ -242,6 +276,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Whether the custom icon is enabled.
+         *
          * @return whether the custom icon is enabled
          */
         public boolean enabled() {
@@ -249,6 +285,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The single icon file name.
+         *
          * @return the single icon file name
          */
         public String file() {
@@ -256,6 +294,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The list of icon files used for rotation.
+         *
          * @return the list of icon files used for rotation
          */
         public List<String> files() {
@@ -263,6 +303,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The icon rotation mode.
+         *
          * @return the icon rotation mode
          */
         public RotationMode rotationMode() {
@@ -317,6 +359,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Whether the version text is overridden.
+         *
          * @return whether the version text is overridden
          */
         public boolean overrideVersion() {
@@ -324,6 +368,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The version text.
+         *
          * @return the version text
          */
         public String versionText() {
@@ -331,6 +377,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Whether the player counts are overridden.
+         *
          * @return whether the player counts are overridden
          */
         public boolean overridePlayers() {
@@ -338,6 +386,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The fake online player count.
+         *
          * @return the fake online player count
          */
         public int onlinePlayers() {
@@ -345,6 +395,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The fake maximum player count.
+         *
          * @return the fake maximum player count
          */
         public int maxPlayers() {
@@ -352,6 +404,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Whether the online player count is hidden.
+         *
          * @return whether the online player count is hidden
          */
         public boolean hideOnline() {
@@ -359,6 +413,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Whether the maximum player count is hidden.
+         *
          * @return whether the maximum player count is hidden
          */
         public boolean hideMax() {
@@ -366,6 +422,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * Whether the player sample is overridden.
+         *
          * @return whether the player sample is overridden
          */
         public boolean overrideSample() {
@@ -373,6 +431,8 @@ public final class hMOTDConfig {
         }
 
         /**
+         * The sample lines shown on hover.
+         *
          * @return the sample lines shown on hover
          */
         public List<String> sampleLines() {
