@@ -20,6 +20,9 @@ public final class ComponentWidthCalculator {
 
     /**
      * Calculates the rendered width of the given component in pixels.
+     *
+     * @param component the component to measure
+     * @return the rendered width in pixels
      */
     public static float width(Component component) {
         WidthListener listener = new WidthListener();

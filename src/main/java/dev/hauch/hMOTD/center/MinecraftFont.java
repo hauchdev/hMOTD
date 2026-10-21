@@ -156,6 +156,13 @@ public final class MinecraftFont {
         return value;
     }
 
+    /**
+     * Returns the horizontal advance of the given character.
+     *
+     * @param character the character
+     * @param bold     whether the glyph is rendered bold
+     * @return the advance in pixels
+     */
     public static float advance(char character, boolean bold) {
         return advance((int) character, bold);
     }
