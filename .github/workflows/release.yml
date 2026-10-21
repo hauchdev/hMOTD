@@ -1,0 +1,124 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag that should be released (for example v1.1.0)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B -Prelease clean package -Dgpg.skip=true
+
+      - name: Import GPG key
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' }}
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          gpg --list-secret-keys --keyid-format=long
+
+      - name: Sign artifacts
+        if: ${{ secrets.GPG_PRIVATE_KEY != '' }}
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn -B -Prelease gpg:sign
+
+      - name: Collect release assets
+        run: |
+          mkdir -p dist
+          cp target/*.jar dist/
+          cp target/*.jar.asc dist/ 2>/dev/null || true
+          cd dist
+          sha256sum *.jar > checksums.txt
+          cat checksums.txt
+
+      - name: Publish to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          name: ${{ github.event.inputs.tag || github.ref_name }}
+          body: |
+            ### Installation
+
+            1. Download `hMOTD-*.jar` (the file without `-sources` or `-javadoc`).
+            2. Copy it into the `plugins` folder of your Velocity proxy.
+            3. Start the proxy, edit `plugins/hMOTD/config.yml` and run `/hmotd reload`.
+
+            ### Requirements
+
+            * Java 21 or newer
+            * Velocity 3.x
+          files: |
+            dist/*.jar
+            dist/*.jar.asc
+            dist/checksums.txt
+          fail_on_unmatched_files: false
+
+  publish-central:
+    name: Publish to Maven Central
+    runs-on: ubuntu-latest
+    if: ${{ secrets.MAVEN_CENTRAL_USERNAME != '' && secrets.MAVEN_CENTRAL_PASSWORD != '' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Write Maven settings
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_PASSWORD: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>ossrh</id>
+                <username>${MAVEN_CENTRAL_USERNAME}</username>
+                <password>${MAVEN_CENTRAL_PASSWORD}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Import GPG key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+
+      - name: Deploy
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn -B -Prelease clean deploy
