@@ -16,11 +16,23 @@ public final class IconCache {
     private final AtomicReference<Path> cachedPath = new AtomicReference<>();
     private volatile long lastModified;
 
+    /**
+     * Creates a cache for icons stored in the given directory.
+     *
+     * @param pluginDirectory the plugin data directory
+     * @param logger          the plugin logger
+     */
     public IconCache(Path pluginDirectory, Logger logger) {
         this.pluginDirectory = pluginDirectory;
         this.logger = logger;
     }
 
+    /**
+     * Resolves the path of the given icon file, caching the result until the file changes.
+     *
+     * @param fileName the icon file name relative to the plugin directory
+     * @return the icon path or {@code null} when the file does not exist
+     */
     public Path getIcon(String fileName) {
         Path iconPath = pluginDirectory.resolve(fileName);
         if (!Files.exists(iconPath)) {
@@ -44,6 +56,9 @@ public final class IconCache {
         }
     }
 
+    /**
+     * Drops the cached icon so it is resolved again on the next request.
+     */
     public void invalidate() {
         cachedPath.set(null);
         lastModified = 0;

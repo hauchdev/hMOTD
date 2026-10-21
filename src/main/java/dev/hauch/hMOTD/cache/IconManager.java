@@ -17,11 +17,23 @@ public final class IconManager {
     private final Logger logger;
     private final AtomicInteger sequentialIndex = new AtomicInteger(0);
 
+    /**
+     * Creates an icon manager.
+     *
+     * @param iconCache the icon path cache
+     * @param logger    the plugin logger
+     */
     public IconManager(IconCache iconCache, Logger logger) {
         this.iconCache = iconCache;
         this.logger = logger;
     }
 
+    /**
+     * Selects the next icon according to the configured rotation mode.
+     *
+     * @param config the icon configuration
+     * @return the selected icon path or {@code null} when no icon is available
+     */
     public Path nextIcon(hMOTDConfig.IconConfig config) {
         if (!config.enabled()) {
             return null;
