@@ -32,17 +32,45 @@ public final class TextAligner {
         }
 
         float width = ComponentWidthCalculator.width(line);
-        int paddingPixels = switch (mode) {
-            case CENTER -> (int) Math.max(0.0F, Math.floor((targetWidth - width) / 2.0F) - 1.0F);
-            case RIGHT -> (int) Math.max(0.0F, Math.floor(targetWidth - width));
+        int spaces = switch (mode) {
+            case CENTER -> spacesForCenter(targetWidth, width, offset);
+            case RIGHT -> spacesForRight(targetWidth, width, offset);
             case LEFT -> 0;
         };
 
-        int spaces = Math.max(0, Math.floorDiv(paddingPixels + offset, SPACE_WIDTH));
-        if (spaces == 0) {
+        if (spaces <= 0) {
             return line;
         }
         return Component.text(" ".repeat(spaces)).append(line);
+    }
+
+    /**
+     * Calculates the amount of spaces that places the line as close as possible to the middle of
+     * the text area. Because the padding can only be applied in whole spaces the result may still be
+     * off by up to half a space width.
+     */
+    private static int spacesForCenter(int targetWidth, float width, int offset) {
+        double idealPadding = (targetWidth - width) / 2.0D + offset;
+        if (idealPadding <= 0.0D) {
+            return 0;
+        }
+        int lower = (int) Math.floor(idealPadding / SPACE_WIDTH);
+        int upper = lower + 1;
+        double lowerError = Math.abs((lower * SPACE_WIDTH) - idealPadding);
+        double upperError = Math.abs((upper * SPACE_WIDTH) - idealPadding);
+        return lowerError <= upperError ? lower : upper;
+    }
+
+    private static int spacesForRight(int targetWidth, float width, int offset) {
+        double idealPadding = targetWidth - width + offset;
+        if (idealPadding <= 0.0D) {
+            return 0;
+        }
+        int lower = (int) Math.floor(idealPadding / SPACE_WIDTH);
+        int upper = lower + 1;
+        double lowerError = Math.abs((lower * SPACE_WIDTH) - idealPadding);
+        double upperError = Math.abs((upper * SPACE_WIDTH) - idealPadding);
+        return lowerError <= upperError ? lower : upper;
     }
 
     /**

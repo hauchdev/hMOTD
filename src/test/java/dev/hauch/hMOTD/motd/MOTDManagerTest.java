@@ -54,8 +54,8 @@ class MOTDManagerTest {
         MOTDManager manager = new MOTDManager(logger, resolver, config);
         String result = plain(manager.nextMOTD());
         assertEquals("A", result.stripLeading());
-        // width of "A" is 6, so (270 - 6) / 2 - 1 = 131 -> 32 spaces
-        assertTrue(result.startsWith(" ".repeat(32)));
+        // width of "A" is 6, so the ideal padding is 132 -> 33 spaces (132px)
+        assertTrue(result.startsWith(" ".repeat(33)));
     }
 
     @Test
@@ -69,8 +69,8 @@ class MOTDManagerTest {
         MOTDManager manager = new MOTDManager(logger, resolver, config);
         String[] lines = plain(manager.nextMOTD()).split("\n");
         assertEquals(2, lines.length);
-        // "A" is 6px wide -> 32 spaces, "BB" is 12px wide -> 32 spaces
-        assertTrue(lines[0].startsWith(" ".repeat(32)));
+        // "A" is 6px wide -> 33 spaces, "BB" is 12px wide -> 32 spaces
+        assertTrue(lines[0].startsWith(" ".repeat(33)));
         assertTrue(lines[1].startsWith(" ".repeat(32)));
     }
 

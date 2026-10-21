@@ -17,8 +17,8 @@ class TextAlignerTest {
         Component aligned = TextAligner.align(Component.text("Hello"), TextAligner.Mode.CENTER, TARGET_WIDTH, 0);
         String plain = plain(aligned);
         assertTrue(plain.endsWith("Hello"));
-        // width of "Hello" is 26, so (270 - 26) / 2 - 1 = 121 -> 30 spaces
-        assertEquals(30, leadingSpaces(plain));
+        // width of "Hello" is 24, so the ideal padding is 123 -> 31 spaces (124px) is the closest
+        assertEquals(31, leadingSpaces(plain));
     }
 
     @Test
@@ -26,8 +26,8 @@ class TextAlignerTest {
         Component bold = Component.text("Hello").decorate(TextDecoration.BOLD);
         Component aligned = TextAligner.align(bold, TextAligner.Mode.CENTER, TARGET_WIDTH, 0);
         String plain = plain(aligned);
-        // bold width of "Hello" is 31, so (270 - 31) / 2 - 1 = 118 -> 29 spaces
-        assertEquals(29, leadingSpaces(plain));
+        // bold width of "Hello" is 29, so the ideal padding is 120.5 -> 30 spaces (120px)
+        assertEquals(30, leadingSpaces(plain));
     }
 
     @Test
@@ -48,7 +48,8 @@ class TextAlignerTest {
     @Test
     void testOffsetShiftsText() {
         Component aligned = TextAligner.align(Component.text("Hello"), TextAligner.Mode.CENTER, TARGET_WIDTH, 4);
-        assertEquals(31, leadingSpaces(plain(aligned)));
+        // ideal padding becomes 127 -> 32 spaces (128px) is the closest
+        assertEquals(32, leadingSpaces(plain(aligned)));
     }
 
     @Test
