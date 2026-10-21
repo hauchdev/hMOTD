@@ -53,15 +53,16 @@ public final class TextFormatter {
     }
 
     /**
-     * Formats the input into one Component per line. The returned list is never empty.
+     * Formats the input into one Component per line. The returned list is never empty and is mutable.
      */
     public List<Component> formatLines(String input) {
+        List<Component> lines = new ArrayList<>();
         if (input == null || input.isEmpty()) {
-            return List.of(Component.empty());
+            lines.add(Component.empty());
+            return lines;
         }
 
         String[] split = input.split("\\n", -1);
-        List<Component> lines = new ArrayList<>(split.length);
         for (String line : split) {
             lines.add(formatLine(line));
         }
