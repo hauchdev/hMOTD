@@ -26,6 +26,13 @@
 - MOTDs containing live placeholders are no longer cached, so `%online%` and friends stay up to date.
 - The user configuration file is no longer rewritten on every reload.
 
+### Infrastructure
+- GitHub Actions pipeline that publishes a signed GitHub Release for every `v*` tag, including the
+  plugin, the sources, the javadoc, the detached GPG signatures and a `checksums.txt`.
+- The release notes are generated automatically from the matching section of this changelog.
+- The packaged plugin descriptor is verified before the release is published.
+- Dependabot keeps the Maven dependencies and the GitHub Actions up to date.
+
 ## 1.0.0
 
 ### Added
