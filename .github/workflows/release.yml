@@ -102,11 +102,10 @@ jobs:
             echo
             echo "* Java 21 or newer"
             echo "* Velocity 3.x"
-            echo
-            if [ -f CHANGELOG.md ]; then
-              awk "/^## ${VERSION}\$/{flag=1; next} /^## /{flag=0} flag" CHANGELOG.md >> RELEASE_NOTES.md
-            fi
           } > RELEASE_NOTES.md
+          if [ -f CHANGELOG.md ]; then
+            awk "/^## ${VERSION}\$/{flag=1; next} /^## /{flag=0} flag" CHANGELOG.md >> RELEASE_NOTES.md
+          fi
           cat RELEASE_NOTES.md
 
       - name: Publish to GitHub Releases
