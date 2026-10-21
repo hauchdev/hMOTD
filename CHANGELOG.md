@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.1.0
+
+### Changed
+- **Rewrote the alignment engine.** The MOTD is now aligned using the real advance widths of the
+  vanilla Minecraft font, including the bold variants, instead of an approximated glyph width table.
+  The previous table used the raw glyph width which was missing the left bearing, so every line was
+  rendered noticeably off centre.
+- The padding is now rounded to the closest possible space, which reduces the maximum deviation
+  from the centre to a single pixel.
+- The alignment is applied on the rendered component, so bold text is measured correctly.
+- The default text area width changed from `248` to `270` pixels, matching the vanilla server list
+  and the value used by other MOTD plugins.
+
+### Added
+- Alignment modes `LEFT`, `CENTER` and `RIGHT`.
+- `center.offset` option for fine tuning the alignment in pixels.
+- `/hmotd test <text>` command that previews the alignment of an arbitrary text.
+- Automatic migration of the removed `center.space-width` option and of the old default width.
+- Unit tests covering the font metrics, the alignment accuracy and the configuration migration.
+
+### Fixed
+- MiniMessage tags are no longer broken by the hex colour normalisation.
+- Multi line MOTDs are aligned line by line instead of only the first line.
+- MOTDs containing live placeholders are no longer cached, so `%online%` and friends stay up to date.
+- The user configuration file is no longer rewritten on every reload.
+
 ## 1.0.0
 
 ### Added
@@ -8,14 +34,10 @@
 - Standalone hex color support inside MiniMessage and mixed modes.
 - Mixed format mode with robust automatic detection.
 - MOTD rotation: random, sequential and disabled.
-- Multi-line MOTD support with independent line alignment.
-- Pixel accurate alignment using the real advance widths of the vanilla Minecraft font
-  (including bold variants) extracted from the vanilla font assets.
-- Alignment modes `LEFT`, `CENTER` and `RIGHT` with a configurable text area width and pixel offset.
+- Multi-line MOTD support.
 - Rotating server icons with multiple files.
 - Player count, version text and sample hover overrides.
 - Built-in placeholders (`%online%`, `%max%`, `%proxy_name%`, `%time%`, `%date%`).
 - User-defined custom placeholders.
 - Hot configuration reload via `/hmotd reload`.
 - `/hmotd preview` command to inspect the rendered MOTD and the active alignment settings.
-- Unit tests for formatter, font metrics, alignment, placeholders, config and MOTD manager.
