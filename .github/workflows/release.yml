@@ -43,7 +43,12 @@ jobs:
 
       - name: Read the project version
         id: project
-        run: echo "version=$(mvn -q help:evaluate -Dexpression=project.version -DforceStdout)" >> "$GITHUB_OUTPUT"
+        run: |
+          set -euo pipefail
+          VERSION=$(sed -n 's/.*<version>\([^<]*\)<\/version>.*/\1/p' pom.xml | head -n 1)
+          test -n "$VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Detected version: $VERSION"
 
       - name: Import GPG key
         if: ${{ secrets.GPG_PRIVATE_KEY != '' }}
@@ -61,12 +66,14 @@ jobs:
       - name: Verify the plugin descriptor
         run: |
           set -euo pipefail
-          JAR="target/hMOTD-${{ steps.project.outputs.version }}.jar"
+          VERSION="${{ steps.project.outputs.version }}"
+          JAR="target/hMOTD-${VERSION}.jar"
           test -f "$JAR"
           rm -rf verify && mkdir verify
           (cd verify && jar xf "../$JAR" velocity-plugin.json)
-          grep -q "\"version\": \"${{ steps.project.outputs.version }}\"" verify/velocity-plugin.json
+          grep -q "\"version\": \"${VERSION}\"" verify/velocity-plugin.json
           grep -q '"main": "dev.hauch.hMOTD.HMOTD"' verify/velocity-plugin.json
+          diff verify/velocity-plugin.json target/classes/velocity-plugin.json
           rm -rf verify
           echo "Plugin descriptor verified"
 
