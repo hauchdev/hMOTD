@@ -33,6 +33,13 @@ public class HMOTD {
     private final ConfigLoader configLoader;
     private MOTDManager motdManager;
 
+    /**
+     * Creates the plugin instance.
+     *
+     * @param proxyServer   the running proxy
+     * @param logger        the plugin logger
+     * @param dataDirectory the plugin data directory
+     */
     @Inject
     public HMOTD(ProxyServer proxyServer, Logger logger, @DataDirectory Path dataDirectory) {
         this.proxyServer = proxyServer;
@@ -42,6 +49,11 @@ public class HMOTD {
         this.config = new AtomicReference<>(loadConfig());
     }
 
+    /**
+     * Registers the listeners and commands once the proxy is ready.
+     *
+     * @param event the proxy initialisation event
+     */
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         logger.info("Enabling hMOTD v${version}");

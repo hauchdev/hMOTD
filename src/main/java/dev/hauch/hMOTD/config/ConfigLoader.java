@@ -20,6 +20,11 @@ public final class ConfigLoader {
     private final YamlConfigurationLoader loader;
     private final ObjectMapper<hMOTDConfig> mapper;
 
+    /**
+     * Creates a loader for the configuration inside the given plugin directory.
+     *
+     * @param pluginDirectory the plugin data directory
+     */
     public ConfigLoader(Path pluginDirectory) {
         this.configPath = pluginDirectory.resolve("config.yml");
         this.loader = YamlConfigurationLoader.builder()
@@ -38,6 +43,9 @@ public final class ConfigLoader {
 
     /**
      * Loads the configuration, creating it from the bundled default when it does not exist yet.
+     *
+     * @return the loaded configuration
+     * @throws ConfigurateException when the file cannot be read or parsed
      */
     public hMOTDConfig load() throws ConfigurateException {
         ensureFileExists();

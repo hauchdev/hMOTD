@@ -28,6 +28,14 @@ public final class HMOTDCommand implements SimpleCommand {
     private final AtomicReference<hMOTDConfig> config;
     private final MOTDManager motdManager;
 
+    /**
+     * Creates the command handler.
+     *
+     * @param logger       the plugin logger
+     * @param configLoader the configuration loader
+     * @param config       the live configuration reference
+     * @param motdManager  the MOTD manager
+     */
     public HMOTDCommand(Logger logger, ConfigLoader configLoader, AtomicReference<hMOTDConfig> config, MOTDManager motdManager) {
         this.logger = logger;
         this.configLoader = configLoader;
