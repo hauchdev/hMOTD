@@ -47,8 +47,8 @@ Every release contains three artifacts:
 | `hMOTD-<version>-sources.jar` | Sources |
 | `hMOTD-<version>-javadoc.jar` | API documentation |
 
-The artifacts are signed with GPG and a `checksums.txt` file with the SHA-256 sums is attached to
-every release.
+A `checksums.txt` file with the SHA-256 sums is attached to every release. The release pipeline does
+not require any secrets, the automatic `GITHUB_TOKEN` is enough.
 
 ## Permissions
 
