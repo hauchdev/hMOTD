@@ -23,7 +23,7 @@ class TextAlignerTest {
 
     @Test
     void testCenterAlignmentWithBold() {
-        Component bold = Component.text("Hello", TextDecoration.BOLD);
+        Component bold = Component.text("Hello").decorate(TextDecoration.BOLD);
         Component aligned = TextAligner.align(bold, TextAligner.Mode.CENTER, TARGET_WIDTH, 0);
         String plain = plain(aligned);
         // bold width of "Hello" is 31, so (270 - 31) / 2 - 1 = 118 -> 29 spaces

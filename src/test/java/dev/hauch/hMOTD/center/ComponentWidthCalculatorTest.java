@@ -10,15 +10,15 @@ class ComponentWidthCalculatorTest {
 
     @Test
     void testPlainTextWidth() {
-        // H=6, e=6, l=4, l=4, o=6
-        assertEquals(26.0F, ComponentWidthCalculator.width(Component.text("Hello")));
+        // H=6, e=6, l=3, l=3, o=6
+        assertEquals(24.0F, ComponentWidthCalculator.width(Component.text("Hello")));
     }
 
     @Test
     void testBoldTextIsWider() {
-        // H=7, e=7, l=5, l=5, o=7
-        assertEquals(31.0F, ComponentWidthCalculator.width(
-                Component.text("Hello", TextDecoration.BOLD)));
+        // H=7, e=7, l=4, l=4, o=7
+        assertEquals(29.0F, ComponentWidthCalculator.width(
+                Component.text("Hello").decorate(TextDecoration.BOLD)));
     }
 
     @Test

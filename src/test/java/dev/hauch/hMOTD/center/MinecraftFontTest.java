@@ -17,9 +17,9 @@ class MinecraftFontTest {
         assertEquals(6.0F, MinecraftFont.advance('A', false));
         assertEquals(6.0F, MinecraftFont.advance('H', false));
         assertEquals(6.0F, MinecraftFont.advance('e', false));
-        assertEquals(4.0F, MinecraftFont.advance('l', false));
-        assertEquals(4.0F, MinecraftFont.advance('i', false));
-        assertEquals(8.0F, MinecraftFont.advance('t', false));
+        assertEquals(3.0F, MinecraftFont.advance('l', false));
+        assertEquals(2.0F, MinecraftFont.advance('i', false));
+        assertEquals(4.0F, MinecraftFont.advance('t', false));
     }
 
     @Test
@@ -28,7 +28,7 @@ class MinecraftFontTest {
         assertEquals(4.0F, MinecraftFont.advance('"', false));
         assertEquals(6.0F, MinecraftFont.advance('#', false));
         assertEquals(4.0F, MinecraftFont.advance('(', false));
-        assertEquals(14.0F, MinecraftFont.advance('@', false));
+        assertEquals(7.0F, MinecraftFont.advance('@', false));
     }
 
     @Test
