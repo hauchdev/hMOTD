@@ -1,6 +1,6 @@
 package dev.hauch.hMOTD.motd;
 
-import dev.hauch.hMOTD.center.CenterCalculator;
+import dev.hauch.hMOTD.center.TextAligner;
 import dev.hauch.hMOTD.config.hMOTDConfig;
 import dev.hauch.hMOTD.format.TextFormatter;
 import dev.hauch.hMOTD.placeholder.PlaceholderResolver;
@@ -15,7 +15,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Selects, caches and renders the next MOTD according to the active configuration.
- * Handles rotation modes, placeholder replacement and optional line-by-line centering.
+ * <p>
+ * The rendering pipeline is: raw text -> placeholder replacement -> per line formatting ->
+ * optional alignment -> line joining.
  */
 public final class MOTDManager {
 
@@ -78,9 +80,26 @@ public final class MOTDManager {
         String withPlaceholders = cfg.placeholders()
                 ? placeholderResolver.resolve(raw, cfg.extraPlaceholders())
                 : raw;
-        String centered = cfg.center().enabled()
-                ? CenterCalculator.center(withPlaceholders, cfg.center().width(), cfg.center().spaceWidth())
-                : withPlaceholders;
-        return formatter.get().format(centered);
+
+        TextFormatter activeFormatter = formatter.get();
+        List<Component> lines = activeFormatter.formatLines(withPlaceholders);
+
+        if (cfg.center().enabled()) {
+            TextAligner.Mode mode = TextAligner.Mode.valueOf(cfg.center().mode().name());
+            int width = cfg.center().width();
+            int offset = cfg.center().offset();
+            for (int i = 0; i < lines.size(); i++) {
+                lines.set(i, TextAligner.align(lines.get(i), mode, width, offset));
+            }
+        }
+
+        Component result = Component.empty();
+        for (int i = 0; i < lines.size(); i++) {
+            result = result.append(lines.get(i));
+            if (i < lines.size() - 1) {
+                result = result.append(Component.newline());
+            }
+        }
+        return result;
     }
 }

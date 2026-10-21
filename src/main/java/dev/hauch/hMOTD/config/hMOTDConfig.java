@@ -92,7 +92,7 @@ public final class hMOTDConfig {
      */
     public void validate() {
         if (center.width <= 0) {
-            center.width = 248;
+            center.width = 270;
         }
         if (serverInfo.onlinePlayers < -1) {
             serverInfo.onlinePlayers = -1;
@@ -108,14 +108,17 @@ public final class hMOTDConfig {
 
     @ConfigSerializable
     public static final class CenterConfig {
-        @Comment("Enable automatic MOTD centering based on Minecraft font widths")
+        @Comment("Enable automatic MOTD alignment based on Minecraft font metrics")
         private boolean enabled = true;
 
-        @Comment("Maximum width in pixels used for centering calculations")
-        private int width = 248;
+        @Comment("Alignment mode: LEFT, CENTER, RIGHT")
+        private AlignMode mode = AlignMode.CENTER;
 
-        @Comment("Width of a single space character in pixels (default Minecraft value is 4)")
-        private int spaceWidth = 4;
+        @Comment("Width of the server list text area in pixels (270 matches the vanilla server list)")
+        private int width = 270;
+
+        @Comment("Fine tuning offset in pixels, positive moves the text to the right")
+        private int offset = 0;
 
         public CenterConfig() {
         }
@@ -128,6 +131,14 @@ public final class hMOTDConfig {
             this.enabled = enabled;
         }
 
+        public AlignMode mode() {
+            return mode;
+        }
+
+        public void mode(AlignMode mode) {
+            this.mode = mode;
+        }
+
         public int width() {
             return width;
         }
@@ -136,12 +147,12 @@ public final class hMOTDConfig {
             this.width = width;
         }
 
-        public int spaceWidth() {
-            return spaceWidth;
+        public int offset() {
+            return offset;
         }
 
-        public void spaceWidth(int spaceWidth) {
-            this.spaceWidth = spaceWidth;
+        public void offset(int offset) {
+            this.offset = offset;
         }
     }
 
@@ -265,5 +276,11 @@ public final class hMOTDConfig {
         MINIMESSAGE,
         LEGACY,
         MIXED
+    }
+
+    public enum AlignMode {
+        LEFT,
+        CENTER,
+        RIGHT
     }
 }
