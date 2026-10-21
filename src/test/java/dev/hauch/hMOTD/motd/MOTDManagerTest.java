@@ -73,6 +73,44 @@ class MOTDManagerTest {
     }
 
     @Test
+    void testEmptyMotdDoesNotFail() {
+        hMOTDConfig config = new hMOTDConfig();
+        config.motds().clear();
+        config.motds().add("");
+        config.center().enabled(true);
+
+        MOTDManager manager = new MOTDManager(logger, resolver, config);
+        assertEquals("", plain(manager.nextMOTD()));
+    }
+
+    @Test
+    void testLeftAlignmentDoesNotPad() {
+        hMOTDConfig config = new hMOTDConfig();
+        config.motds().clear();
+        config.motds().add("Hello");
+        config.center().enabled(true);
+        config.center().mode(hMOTDConfig.AlignMode.LEFT);
+
+        MOTDManager manager = new MOTDManager(logger, resolver, config);
+        assertEquals("Hello", plain(manager.nextMOTD()));
+    }
+
+    @Test
+    void testRightAlignmentPadsToTheRight() {
+        hMOTDConfig config = new hMOTDConfig();
+        config.motds().clear();
+        config.motds().add("Hello");
+        config.center().enabled(true);
+        config.center().mode(hMOTDConfig.AlignMode.RIGHT);
+
+        MOTDManager manager = new MOTDManager(logger, resolver, config);
+        String result = plain(manager.nextMOTD());
+        assertTrue(result.endsWith("Hello"));
+        // 270 - 24 = 246 -> 61 spaces
+        assertTrue(result.startsWith(" ".repeat(61)));
+    }
+
+    @Test
     void testMultiLineMotd() {
         hMOTDConfig config = new hMOTDConfig();
         config.motds().clear();
