@@ -29,6 +29,15 @@ public final class PingListener {
     private final PlaceholderResolver placeholderResolver;
     private final Logger logger;
 
+    /**
+     * Creates the proxy ping listener.
+     *
+     * @param config              the live configuration reference
+     * @param motdManager         the MOTD manager
+     * @param iconManager         the icon manager
+     * @param placeholderResolver the placeholder resolver
+     * @param logger              the plugin logger
+     */
     public PingListener(AtomicReference<hMOTDConfig> config, MOTDManager motdManager, IconManager iconManager, PlaceholderResolver placeholderResolver, Logger logger) {
         this.config = config;
         this.motdManager = motdManager;
@@ -41,6 +50,11 @@ public final class PingListener {
         return TextFormatter.of(TextFormatter.Mode.valueOf(cfg.formatMode().name()));
     }
 
+    /**
+     * Customises the server list response of every proxy ping.
+     *
+     * @param event the ping event
+     */
     @Subscribe
     public void onProxyPing(ProxyPingEvent event) {
         try {

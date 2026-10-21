@@ -28,6 +28,13 @@ public final class MOTDManager {
     private final AtomicInteger sequentialIndex = new AtomicInteger(0);
     private final ConcurrentHashMap<String, Component> cache = new ConcurrentHashMap<>();
 
+    /**
+     * Creates a MOTD manager.
+     *
+     * @param logger              the plugin logger
+     * @param placeholderResolver the placeholder resolver
+     * @param initialConfig       the configuration to start with
+     */
     public MOTDManager(Logger logger, PlaceholderResolver placeholderResolver, hMOTDConfig initialConfig) {
         this.logger = logger;
         this.placeholderResolver = placeholderResolver;
@@ -35,6 +42,11 @@ public final class MOTDManager {
         this.formatter = new AtomicReference<>(createFormatter(initialConfig));
     }
 
+    /**
+     * Applies a new configuration and clears all cached MOTDs.
+     *
+     * @param newConfig the new configuration
+     */
     public void reload(hMOTDConfig newConfig) {
         this.config.set(newConfig);
         this.formatter.set(createFormatter(newConfig));
@@ -49,6 +61,11 @@ public final class MOTDManager {
         return TextFormatter.of(TextFormatter.Mode.valueOf(config.formatMode().name()));
     }
 
+    /**
+     * Renders the next MOTD according to the configured rotation mode.
+     *
+     * @return the rendered MOTD
+     */
     public Component nextMOTD() {
         hMOTDConfig cfg = config.get();
         List<String> motds = cfg.motds();
